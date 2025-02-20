@@ -12,7 +12,7 @@ resources:
 variables:
   ORG_NAME: 'gustavopintari0575'
   PROJECT_NAME: 'gustavopintari'
-  REPO_NAME: '235e4624-6149-477f-8f1f-8aa04591f38d'
+  REPO_NAME: '930053636'
   BRANCH_PREFIX: 'feature'
   
 steps:
