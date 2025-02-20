@@ -12,8 +12,14 @@ resources:
 steps:
 - script: az config set extension.use_dynamic_install=yes_without_prompt
   displayName: 'Allow extensions'
+
 - script: echo $(System.AccessToken) | az devops login
   displayName: 'Login to DevOps'
+
+- script: az pipelines variable-group list --output table
+  env: 
+    AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
+  displayName: 'List variable groups using the script step'
 - task: AzureCLI@2
   inputs:
     azureSubscription: 'Azure subscription 1(d1413d79-a1e8-44df-aa50-b234924c04eb)'
