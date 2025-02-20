@@ -9,6 +9,12 @@ resources:
     - webhook: Incoming         ### Webhook name
       connection: Incoming    ### Incoming webhook service connection name
 
+variables:
+  ORG_NAME: 'gustavopintari0575'
+  PROJECT_NAME: 'gustavopintari'
+  REPO_NAME: 'AdvancedApexSpecialistSuperBadge'
+  BRANCH_PREFIX: 'feature'
+  
 steps:
 - script: az config set extension.use_dynamic_install=yes_without_prompt
   displayName: 'Allow extensions'
@@ -16,25 +22,17 @@ steps:
 - script: echo $(System.AccessToken) | az devops login
   displayName: 'Login to DevOps'
 
-- script: az pipelines variable-group list --output table
-  env: 
-    AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
-  displayName: 'List variable groups using the script step'
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'Azure subscription 1(d1413d79-a1e8-44df-aa50-b234924c04eb)'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript:
-      WORK_ITEM_ID='${{ parameters.Incoming.resource.id }}'
-      BRANCH_NAME='feature/WorkItem-$WORK_ITEM_ID'
-      ORG_NAME='gustavopintari0575'
-      PROJECT_NAME='gustavopintari'
-      REPO_NAME='AdvancedApexSpecialistSuperBadge'
-      DEFAULT_BRANCH='main'
+- script: |
+    echo "Criando a branch..."
+    WORK_ITEM_ID=${{ parameters.Incoming.resource.id }}
+    BRANCH_NAME=$(BRANCH_PREFIX)/WorkItem-$WORK_ITEM_ID
 
-      OBJECT_ID=$(az repos ref list --repository "$REPO_NAME" --project "$PROJECT_NAME" --organization "https://dev.azure.com/$ORG_NAME" --filter "heads/$DEFAULT_BRANCH" --query "[0].objectId" -o tsv)
+    echo "Branch a ser criada: $BRANCH_NAME"
 
-      az repos ref create --name "refs/heads/$BRANCH_NAME" --object-id "$OBJECT_ID" --organization "https://dev.azure.com/$ORG_NAME" --project "$PROJECT_NAME" --repository "$REPO_NAME"
-
-      echo 'Branch $BRANCH_NAME criada com sucesso!'
+    az repos ref create \
+      --name "refs/heads/$BRANCH_NAME" \
+      --object-id "<COMMIT_ID>" \
+      --organization "https://dev.azure.com/$(ORG_NAME)" \
+      --project "$(PROJECT_NAME)" \
+      --repository "$(REPO_NAME)"
+  displayName: 'Criar nova branch no Git'
