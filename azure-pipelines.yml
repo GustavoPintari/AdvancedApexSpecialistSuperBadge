@@ -16,3 +16,12 @@ steps:
     ### JSON payload data is available in the form of ${{ parameters.<WebhookAlias>.<JSONPath>}}
     script: |
       Write-Host "message:  ${{ parameters.Incoming.message.text}}"
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'Azure subscription 1(d1413d79-a1e8-44df-aa50-b234924c04eb)'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az --version
+      az account show
