@@ -21,12 +21,14 @@ steps:
 
 # - script: az config set extension.use_dynamic_install=yes_without_prompt
 #   displayName: 'Allow extensions'
+- script: az devops configure --defaults organization="https://dev.azure.com/$ORG_NAME" project= "$PROJECT_NAME"
+  displayName: 'Config'
 
 - script: echo $(System.AccessToken) | az devops login
   displayName: 'Login to DevOps'
-  condition: 
   
-- script: echo az repos list --org "https://dev.azure.com/$ORG_NAME" --project "$PROJECT_NAME"
+- script: echo az repos list --org "https://dev.azure.com/$ORG_NAME" --project "$PROJECT_NAME" | teste
+  displayName: 'Repo list'
 
 - script: |
     echo "Criando a branch..."
