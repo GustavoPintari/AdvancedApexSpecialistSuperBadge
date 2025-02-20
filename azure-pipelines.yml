@@ -22,6 +22,16 @@ steps:
     azureSubscription: 'Azure subscription 1(d1413d79-a1e8-44df-aa50-b234924c04eb)'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
-    inlineScript: |
-      az --version
-      az account show
+    inlineScript:
+      WORK_ITEM_ID='${{ parameters.Incoming.resource.id }}'
+      BRANCH_NAME='feature/WorkItem-$WORK_ITEM_ID'
+      ORG_NAME='gustavopintari0575'
+      PROJECT_NAME='gustavopintari'
+      REPO_NAME='AdvancedApexSpecialistSuperBadge'
+      DEFAULT_BRANCH='main'
+
+      OBJECT_ID=$(az repos ref list --repository "$REPO_NAME" --project "$PROJECT_NAME" --organization "https://dev.azure.com/$ORG_NAME" --filter "heads/$DEFAULT_BRANCH" --query "[0].objectId" -o tsv)
+
+      az repos ref create --name "refs/heads/$BRANCH_NAME" --object-id "$OBJECT_ID" --organization "https://dev.azure.com/$ORG_NAME" --project "$PROJECT_NAME" --repository "$REPO_NAME"
+
+      echo 'Branch $BRANCH_NAME criada com sucesso!'
