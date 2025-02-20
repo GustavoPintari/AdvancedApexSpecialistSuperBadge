@@ -10,13 +10,10 @@ resources:
       connection: Incoming    ### Incoming webhook service connection name
 
 steps:
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    ### JSON payload data is available in the form of ${{ parameters.<WebhookAlias>.<JSONPath>}}
-    script: |
-      Write-Host "message:  ${{ parameters.Incoming.message.text}}"
-
+- script: az config set extension.use_dynamic_install=yes_without_prompt
+  displayName: 'Allow extensions'
+- script: echo $(System.AccessToken) | az devops login
+  displayName: 'Login to DevOps'
 - task: AzureCLI@2
   inputs:
     azureSubscription: 'Azure subscription 1(d1413d79-a1e8-44df-aa50-b234924c04eb)'
