@@ -31,7 +31,7 @@ steps:
 
     az repos ref create \
       --name "refs/heads/$BRANCH_NAME" \
-      --object-id "$WORK_ITEM_ID" \
+      --object-id "main" \
       --organization "https://dev.azure.com/$(ORG_NAME)" \
       --project "$(PROJECT_NAME)" \
       --repository "$(REPO_NAME)"
