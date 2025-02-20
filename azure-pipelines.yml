@@ -3,17 +3,36 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
-- main
+trigger: none
+resources:
+  webhooks:
+    - webhook: Incoming         ### Webhook name
+      connection: Incoming    ### Incoming webhook service connection name
 
-pool:
-  vmImage: ubuntu-latest
-
+variables:
+  ORG_NAME: 'gustavopintari0575'
+  PROJECT_NAME: 'gustavopintari'
+  REPO_NAME: 'AdvancedApexSpecialistSuperBadge'
+  BRANCH_PREFIX: 'feature'
+  
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- script: az config set extension.use_dynamic_install=yes_without_prompt
+  displayName: 'Allow extensions'
+
+- script: echo $(System.AccessToken) | az devops login
+  displayName: 'Login to DevOps'
 
 - script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+    echo "Criando a branch..."
+    WORK_ITEM_ID=${{ parameters.Incoming.resource.id }}
+    BRANCH_NAME=$(BRANCH_PREFIX)/WorkItem-$WORK_ITEM_ID
+
+    echo "Branch a ser criada: $BRANCH_NAME"
+
+    az repos ref create \
+      --name "refs/heads/$BRANCH_NAME" \
+      --object-id "$WORK_ITEM_ID" \
+      --organization "https://dev.azure.com/$ORG_NAME" \
+      --project "$PROJECT_NAME" \
+      --repository "$REPO_NAME"
+  displayName: 'Criar nova branch no Git'
