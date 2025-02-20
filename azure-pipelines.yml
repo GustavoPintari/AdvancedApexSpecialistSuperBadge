@@ -34,5 +34,5 @@ steps:
       --object-id "<COMMIT_ID>" \
       --organization "https://dev.azure.com/$(ORG_NAME)" \
       --project "$(PROJECT_NAME)" \
-      --repository "$(REPO_NAME)"
+      --repository $(Build.Repository.Name)
   displayName: 'Criar nova branch no Git'
