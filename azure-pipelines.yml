@@ -31,7 +31,7 @@ steps:
 
     az repos ref create \
       --name "refs/heads/Teste" \
-      --object-id "$WORK_ITEM_ID" \
+      --object-id "af7717968e8703b0fcee88c63e04b62feec812cd" \
       --organization "https://dev.azure.com/$ORG_NAME" \
       --project "$PROJECT_NAME" \
       --repository "$REPO_NAME"
