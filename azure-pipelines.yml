@@ -15,4 +15,4 @@ steps:
     targetType: 'inline'
     ### JSON payload data is available in the form of ${{ parameters.<WebhookAlias>.<JSONPath>}}
     script: |
-      Write-Host "message:  ${{ parameters.MyWebhookTrigger.message.text}}"
+      Write-Host "message:  ${{ parameters.Incoming.message.text}}"
