@@ -30,7 +30,7 @@ steps:
     echo "Branch a ser criada: $BRANCH_NAME"
 
     az repos ref create \
-      --name "main/$BRANCH_NAME" \
+      --name "refs/heads/$BRANCH_NAME" \
       --object-id "$WORK_ITEM_ID" \
       --organization "https://dev.azure.com/$ORG_NAME" \
       --project "$PROJECT_NAME" \
