@@ -12,7 +12,7 @@ resources:
 variables:
   ORG_NAME: 'gustavopintari0575'
   PROJECT_NAME: 'gustavopintari'
-  REPO_NAME: '930053636'
+  REPO_NAME: 'GustavoPintari/AdvancedApexSpecialistSuperBadge'
   BRANCH_PREFIX: 'feature'
   
 steps:
@@ -31,8 +31,8 @@ steps:
 
     az repos ref create \
       --name "refs/heads/$BRANCH_NAME" \
-      --object-id "<COMMIT_ID>" \
+      --object-id "$WORK_ITEM_ID" \
       --organization "https://dev.azure.com/$(ORG_NAME)" \
       --project "$(PROJECT_NAME)" \
-      --repository $(Build.Repository.Name)
+      --repository "$REPO_NAME"
   displayName: 'Criar nova branch no Git'
