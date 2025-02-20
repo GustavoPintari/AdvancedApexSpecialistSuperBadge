@@ -12,7 +12,7 @@ resources:
 variables:
   ORG_NAME: 'gustavopintari0575'
   PROJECT_NAME: 'gustavopintari'
-  REPO_NAME: 'AdvancedApexSpecialistSuperBadge'
+  REPO_NAME: 'GustavoPintari/AdvancedApexSpecialistSuperBadge'
   BRANCH_PREFIX: 'feature'
   
 steps:
