@@ -16,11 +16,15 @@ variables:
   BRANCH_PREFIX: 'feature'
   
 steps:
-- script: az config set extension.use_dynamic_install=yes_without_prompt
-  displayName: 'Allow extensions'
+- checkout: self
+  persistCredentials: true
 
-- script: echo $(System.AccessToken) | az devops login
-  displayName: 'Login to DevOps'
+# - script: az config set extension.use_dynamic_install=yes_without_prompt
+#   displayName: 'Allow extensions'
+
+# - script: echo $(System.AccessToken) | az devops login
+#   displayName: 'Login to DevOps'
+#   condition: 
 
 - script: |
     echo "Criando a branch..."
