@@ -27,7 +27,7 @@ steps:
 - script: echo $(System.AccessToken) | az devops login
   displayName: 'Login to DevOps'
   
-- script: echo az repos list --org "https://dev.azure.com/$ORG_NAME" --project "$PROJECT_NAME" | teste
+- script: az repos list --org "https://dev.azure.com/$ORG_NAME" --project "$PROJECT_NAME"
   displayName: 'Repo list'
 
 - script: |
