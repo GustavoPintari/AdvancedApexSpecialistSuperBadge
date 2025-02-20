@@ -25,6 +25,8 @@ steps:
 - script: echo $(System.AccessToken) | az devops login
   displayName: 'Login to DevOps'
   condition: 
+  
+- script: echo az repos list --org "https://dev.azure.com/$ORG_NAME" --project "$PROJECT_NAME"
 
 - script: |
     echo "Criando a branch..."
