@@ -30,9 +30,9 @@ steps:
     echo "Branch a ser criada: $BRANCH_NAME"
 
     az repos ref create \
-      --name "refs/heads/$BRANCH_NAME" \
-      --object-id "main" \
-      --organization "https://dev.azure.com/$(ORG_NAME)" \
-      --project "$(PROJECT_NAME)" \
-      --repository "$(REPO_NAME)"
+      --name "main/$BRANCH_NAME" \
+      --object-id "$WORK_ITEM_ID" \
+      --organization "https://dev.azure.com/$ORG_NAME" \
+      --project "$PROJECT_NAME" \
+      --repository "$REPO_NAME"
   displayName: 'Criar nova branch no Git'
