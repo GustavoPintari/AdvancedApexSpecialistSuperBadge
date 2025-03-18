@@ -10,3 +10,32 @@ package.xml
 
 # LWC Jest
 **/__tests__/**
+
+# ignore managed package like marketing cloud connector
+**/et4ae5__*
+
+# others
+force-app/main/default/staticresources/
+force-app/main/default/reportTypes/
+force-app/main/default/installedPackages/
+force-app/main/default/presenceUserConfigs/
+force-app/main/default/forecastingTypes/
+force-app/main/default/dashboards/
+force-app/main/default/profiles/
+force-app/main/default/profilePasswordPolicy/
+force-app/main/default/profileSessionSetting/
+
+# ignore some protected settings
+force-app/main/default/settings/SocialCustomerService.settings-meta.xml
+force-app/main/default/settings/IdentityProvider.settings-meta.xml
+force-app/main/default/settings/IndustriesEinsteinFeature.settings-meta.xml
+force-app/main/default/settings/ForecastingObjectList.settings-meta.xml
+force-app/main/default/settings/ExternalClientApp.settings-meta.xml
+force-app/main/default/settings/ChatterAnswers.settings-meta.xml
+force-app/main/default/settings/EinsteinAgent.settings-meta.xml
+force-app/main/default/settings/EngagementMessaging.settings-meta.xml
+force-app/main/default/settings/HighVelocitySales.settings-meta.xml
+force-app/main/default/settings/DataImportManagement.settings-meta.xml
+force-app/main/default/settings/PaymentsIngestEnabled.settings-meta.xml
+force-app/main/default/settings/MapsAndLocation.settings-meta.xml
+force-app/main/default/settings/OnlineSales.settings-meta.xml
