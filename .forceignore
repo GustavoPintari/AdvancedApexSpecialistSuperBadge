@@ -39,3 +39,6 @@ force-app/main/default/settings/DataImportManagement.settings-meta.xml
 force-app/main/default/settings/PaymentsIngestEnabled.settings-meta.xml
 force-app/main/default/settings/MapsAndLocation.settings-meta.xml
 force-app/main/default/settings/OnlineSales.settings-meta.xml
+**/tsconfig.json
+
+**/*.ts
