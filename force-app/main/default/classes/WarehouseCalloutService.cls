@@ -1,15 +1,13 @@
 public with sharing class WarehouseCalloutService implements Queueable, Database.AllowsCallouts {
 
-    public List<Product2> lEquipmentsToUpsert = new List<Product2>();
-
     private static final String WAREHOUSE_URL;
     private static final Map<String, String> WAREHOUSE_TO_SALESFORCE_FIELD_MAPPING;
 
     public void execute(QueueableContext context) {
-        Database.upsert(this.lEquipmentsToUpsert, Product2.Warehouse_SKU__c);
+        upsertEquipmentsWithWareHouseData();
     }
 
-    public void upsertEquipmentsWithWareHouseData() {
+    private void upsertEquipmentsWithWareHouseData() {
         HttpRequest request = new HttpRequest();
         request.setEndpoint(WAREHOUSE_URL);
         request.setMethod('GET');
@@ -18,6 +16,8 @@ public with sharing class WarehouseCalloutService implements Queueable, Database
         if (response.getStatusCode() != 200) {
             return;
         }
+
+        List<Product2> lEquipmentsToUpsert = new List<Product2>();
 
         for (Object result : (List<Object>) JSON.deserializeUntyped(response.getBody())) {
             Product2 equipment = new Product2();
@@ -30,10 +30,10 @@ public with sharing class WarehouseCalloutService implements Queueable, Database
                 equipment.put(WAREHOUSE_TO_SALESFORCE_FIELD_MAPPING.get(field), mResult.get(field));
             }
 
-            this.lEquipmentsToUpsert.add(equipment);
+            lEquipmentsToUpsert.add(equipment);
         }
 
-        System.enqueueJob(this);
+        Database.upsert(lEquipmentsToUpsert, Product2.Warehouse_SKU__c);
     }
 
     static {

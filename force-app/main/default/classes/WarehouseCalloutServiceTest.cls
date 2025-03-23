@@ -10,7 +10,7 @@ public with sharing class WarehouseCalloutServiceTest {
 
         Test.startTest();
 
-        new WarehouseCalloutService().upsertEquipmentsWithWareHouseData();
+        System.enqueueJob(new WarehouseCalloutService());
 
         Test.stopTest();
 
@@ -31,7 +31,7 @@ public with sharing class WarehouseCalloutServiceTest {
 
         Test.startTest();
 
-        new WarehouseCalloutService().upsertEquipmentsWithWareHouseData();
+        System.enqueueJob(new WarehouseCalloutService());
 
         Test.stopTest();
 
