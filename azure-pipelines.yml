@@ -13,21 +13,18 @@ variables:
   ORG_NAME: 'gustavopintari0575'
   PROJECT_NAME: 'gustavopintari'
   REPO_NAME: 'AdvancedApexSpecialistSuperBadge'
-  BRANCH_PREFIX: 'feature'
+  BRANCH_PREFIX: 'f-'
   
 steps:
 - checkout: self
   persistCredentials: true
-
-# - script: az config set extension.use_dynamic_install=yes_without_prompt
-#   displayName: 'Allow extensions'
-- script: az devops configure --defaults organization="https://dev.azure.com/$ORG_NAME" project="$PROJECT_NAME"
-  displayName: 'Config'
-
-- script: echo $(System.AccessToken) | az devops login
-  displayName: 'Login to DevOps'
   
-- script: az repos list --org "https://dev.azure.com/$ORG_NAME" --project "$PROJECT_NAME"
+- script: |
+    az devops configure --defaults organization="https://dev.azure.com/$ORG_NAME" project="$PROJECT_NAME"
+
+    echo $(System.AccessToken) | az devops login
+
+    az repos list --org "https://dev.azure.com/$ORG_NAME" --project "$PROJECT_NAME"
   displayName: 'Repo list'
 
 - script: |
