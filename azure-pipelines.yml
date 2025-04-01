@@ -22,13 +22,9 @@ steps:
 - script: |
     az devops configure --defaults organization="https://dev.azure.com/$ORG_NAME" project="$PROJECT_NAME"
 
-    echo $(System.AccessToken) | az devops login --organization https://dev.azure.com/$(ORG_NAME)
+    echo $(System.AccessToken) | az devops login --organization https://dev.azure.com/$(ORG_NAME) --debug
     
-    az devops project list --organization https://dev.azure.com/$(ORG_NAME)
-
-    az devops user show
-    
-    az repos list --org https://dev.azure.com/$(ORG_NAME) --project $(PROJECT_NAME) --debug
+    az repos list --org https://dev.azure.com/$(ORG_NAME) --project $(PROJECT_NAME)
   displayName: 'Repo list'
 
 - script: |
