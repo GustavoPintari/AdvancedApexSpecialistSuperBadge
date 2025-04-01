@@ -26,7 +26,9 @@ steps:
     
     az devops project list --organization https://dev.azure.com/$(ORG_NAME)
 
-    az repos list --org "https://dev.azure.com/$ORG_NAME" --project "$PROJECT_NAME"
+    az devops user show
+    
+    az repos list --org https://dev.azure.com/$(ORG_NAME) --project $(PROJECT_NAME) --debug
   displayName: 'Repo list'
 
 - script: |
