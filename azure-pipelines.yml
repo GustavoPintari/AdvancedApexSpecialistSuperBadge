@@ -20,9 +20,11 @@ steps:
   persistCredentials: true
   
 - script: |
+    az cache purge
+
     echo $(System.AccessToken) | az devops login --organization https://dev.azure.com/$(ORG_NAME) --verbose
 
-    az devops configure -d organization="https://dev.azure.com/$ORG_NAME" project="$PROJECT_NAME" --verbose
+    az devops configure -d organization="https://dev.azure.com/$ORG_NAME" project="$PROJECT_NAME"
 
     az repos list --org https://dev.azure.com/$(ORG_NAME) --project $(PROJECT_NAME) --debug
   displayName: 'Repo list'
@@ -40,4 +42,6 @@ steps:
       --organization "https://dev.azure.com/$ORG_NAME" \
       --project "$PROJECT_NAME" \
       --repository "$REPO_NAME"
+    
+    az logout
   displayName: 'Criar nova branch no Git'
