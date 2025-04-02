@@ -23,10 +23,10 @@ steps:
     AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
   displayName: 'Login Azure DevOps Extension'
   
-- script: az repos list --org https://dev.azure.com/$(ORG_NAME) --project $(PROJECT_NAME) --debug
+- bash:
+    az repos pr show --id 14
   env:
-      AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
-  displayName: 'Repo list'
+    AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
 
 - script: |
     echo "Criando a branch..."
