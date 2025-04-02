@@ -8,6 +8,10 @@ resources:
   webhooks:
     - webhook: Incoming         ### Webhook name
       connection: Incoming    ### Incoming webhook service connection name
+  repositories:
+    - repository: AdvancedApexSpecialistSuperBadge
+      name: gustavopintari/AdvancedApexSpecialistSuperBadge
+      type: git
 
 variables:
   ORG_NAME: 'gustavopintari0575'
@@ -24,7 +28,7 @@ steps:
   displayName: 'Login Azure DevOps Extension'
   
 - bash:
-    az repos pr show --id 14 --org https://dev.azure.com/$(ORG_NAME) --project $(PROJECT_NAME) --debug
+    az repos list --org https://dev.azure.com/$(ORG_NAME) --project $(PROJECT_NAME) --debug
   env:
     AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
 
