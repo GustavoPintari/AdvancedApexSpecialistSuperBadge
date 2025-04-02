@@ -18,13 +18,13 @@ variables:
 steps:
 - checkout: self
   
-- script: echo ${AZURE_DEVOPS_CLI_PAT} | az devops login
+- script: echo ${AZURE_DEVOPS_CLI_PAT} | az login
   env:
     AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
   displayName: 'Login Azure DevOps Extension'
   
 - bash:
-    az login | az repos list --org https://dev.azure.com/$(ORG_NAME) --project $(PROJECT_NAME) --debug
+    az repos list --org https://dev.azure.com/$(ORG_NAME) --project $(PROJECT_NAME) --debug
   env:
     AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
 
@@ -33,7 +33,12 @@ steps:
     WORK_ITEM_ID=${{ parameters.Incoming.resource.id }}
     BRANCH_NAME=$(BRANCH_PREFIX)/WorkItem-$WORK_ITEM_ID
 
-    echo "Branch a ser criada: $BRANCH_NAME"
+    az repos ref create \
+      --name "refs/heads/$BRANCH_NAME" \
+      --object-id "$WORK_ITEM_ID" \
+      --organization "https://dev.azure.com/$ORG_NAME" \
+      --project "$PROJECT_NAME" \
+      --repository "$REPO_NAME" --debug
 
     az devops logout
   displayName: 'Criar nova branch no Git'
