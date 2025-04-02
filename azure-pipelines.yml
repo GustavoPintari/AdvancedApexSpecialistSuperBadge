@@ -19,14 +19,12 @@ steps:
 - checkout: self
   persistCredentials: true
   
-- script: |
-    az cache purge
-    
-    az extension add -n azure-devops
-
-    echo $(System.AccessToken) | az devops login --organization https://dev.azure.com/$(ORG_NAME)
-
-    az repos list --org https://dev.azure.com/$(ORG_NAME) --project $(PROJECT_NAME) --debug
+- script: echo ${AZURE_DEVOPS_CLI_PAT} | az devops login
+  env:
+    AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
+  displayName: 'Login Azure DevOps Extension'
+  
+- script: az repos list --org https://dev.azure.com/$(ORG_NAME) --project $(PROJECT_NAME) --debug
   displayName: 'Repo list'
 
 - script: |
