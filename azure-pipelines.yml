@@ -10,7 +10,7 @@ resources:
       connection: Incoming    ### Incoming webhook service connection name
   repositories:
     - repository: AdvancedApexSpecialistSuperBadge
-      name: GustavoPintari/AdvancedApexSpecialistSuperBadge
+      name: gustavopintari/AdvancedApexSpecialistSuperBadge
       type: git
 
 variables:
