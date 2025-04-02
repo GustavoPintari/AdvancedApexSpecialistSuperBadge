@@ -34,11 +34,10 @@ steps:
     BRANCH_NAME=$(BRANCH_PREFIX)/WorkItem-$WORK_ITEM_ID
 
     az repos ref create \
-      --name "refs/heads/$BRANCH_NAME" \
-      --object-id "$WORK_ITEM_ID" \
+      --name "refs/heads/$testee" \
+      --object-id "13" \
       --organization "https://dev.azure.com/$ORG_NAME" \
       --project "$PROJECT_NAME" \
       --repository "$REPO_NAME" --debug
 
-    az devops logout
   displayName: 'Criar nova branch no Git'
