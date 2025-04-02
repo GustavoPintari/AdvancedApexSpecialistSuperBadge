@@ -17,6 +17,7 @@ variables:
   
 steps:
 - checkout: self
+  persistCredentials: true
   
 - script: echo ${AZURE_DEVOPS_CLI_PAT} | az login
   env:
@@ -33,11 +34,11 @@ steps:
     WORK_ITEM_ID=${{ parameters.Incoming.resource.id }}
     BRANCH_NAME=$(BRANCH_PREFIX)/WorkItem-$WORK_ITEM_ID
 
-    az repos ref create \
-      --name "refs/heads/$testee" \
-      --object-id "13" \
+      az repos ref create \
+      --name "refs/heads/$BRANCH_NAME" \
+      --object-id "$WORK_ITEM_ID" \
       --organization "https://dev.azure.com/$ORG_NAME" \
       --project "$PROJECT_NAME" \
-      --repository "$REPO_NAME" --debug
+      --repository "$REPO_NAME"
 
   displayName: 'Criar nova branch no Git'
