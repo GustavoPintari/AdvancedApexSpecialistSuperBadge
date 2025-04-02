@@ -32,12 +32,12 @@ steps:
 - script: |
     echo "Criando a branch..."
     WORK_ITEM_ID=${{ parameters.Incoming.resource.id }}
-    BRANCH_NAME=$(BRANCH_PREFIX)/WorkItem-13
+    BRANCH_NAME=13
 
-    OBJECT_ID=$(az repos ref list --repository $REPO_NAME --project $PROJECT_NAME --organization "https://dev.azure.com/$ORG_NAME" --query "[?name=='refs/heads/main'].objectId" -o tsv)
+    OBJECT_ID=$(az repos ref list --repository $REPO_NAME --project $PROJECT_NAME --organization "https://dev.azure.com/$ORG_NAME" --query "[?name=='refs/heads/master'].objectId" -o tsv)
 
       az repos ref create \
-      --name "refs/heads/$BRANCH_NAME" \
+      --name "heads/$BRANCH_NAME" \
       --object-id "$OBJECT_ID" \
       --organization "https://dev.azure.com/$ORG_NAME" \
       --project "$PROJECT_NAME" \
