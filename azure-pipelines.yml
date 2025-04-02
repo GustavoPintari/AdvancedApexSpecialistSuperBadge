@@ -23,7 +23,9 @@ steps:
     AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
   displayName: 'Login Azure DevOps Extension'
   
-- script: az repos list --debug
+- script: az repos list --org https://dev.azure.com/$(ORG_NAME) --project $(PROJECT_NAME) --debug
+  env:
+      AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
   displayName: 'Repo list'
 
 - script: |
