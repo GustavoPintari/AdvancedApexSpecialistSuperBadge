@@ -24,7 +24,7 @@ steps:
   displayName: 'Login Azure DevOps Extension'
   
 - bash:
-    az repos list --org https://dev.azure.com/$(ORG_NAME) --project $(PROJECT_NAME) --debug
+    az login | az repos list --org https://dev.azure.com/$(ORG_NAME) --project $(PROJECT_NAME) --debug
   env:
     AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
 
