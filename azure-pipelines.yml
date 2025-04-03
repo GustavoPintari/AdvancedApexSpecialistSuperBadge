@@ -20,12 +20,10 @@ steps:
   persistCredentials: true
   
 - script: |
-    if command -v gh &> /dev/null; then
-        echo "GitHub CLI (gh) está instalado."
-    else
-        echo "GitHub CLI (gh) NÃO está instalado."
-    fi
-  displayName: "Verificar instalação do GitHub CLI no Linux/macOS"
+    echo $(GitHubPAT) | gh auth login --with-token
+  displayName: 'Authenticate with GitHub CLI'
+  env:
+    GitHubPAT: $(GitHubPAT)
   
 - script: |
     echo "Criando a branch..."
