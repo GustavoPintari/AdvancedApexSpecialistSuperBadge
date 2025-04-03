@@ -20,24 +20,10 @@ steps:
   persistCredentials: true
   
 - script: |
-    if [ -z "$GH_TOKEN" ]; then
-        echo "❌ GH_TOKEN não está definido!"
-        exit 1
-    else
-        echo "✅ GH_TOKEN está definido."
-    fi
+    gh auth status
   env:
-    GH_TOKEN: $(Secrets.Secrets)
-  displayName: "Verificar se GH_TOKEN está definido"
-  
-- script: |
-    if gh auth status &> /dev/null; then
-        echo "✅ Autenticado no GitHub CLI."
-    else
-        echo "❌ NÃO autenticado no GitHub CLI."
-        exit 1  # Opcional: falha o job se não estiver autenticado
-    fi
-  displayName: "Verificar autenticação no GitHub CLI"
+    GH_TOKEN: $(Secrets.GH_TOKEN)
+  displayName: "Testar autenticação no GitHub CLI"
   
 - script: |
     echo "Criando a branch..."
