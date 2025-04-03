@@ -20,6 +20,7 @@ steps:
   persistCredentials: true
 
 - script: |
+    echo $GITHUB_TOKEN
     gh auth status
   env:
     GITHUB_TOKEN: $(Secrets.GH_TOKEN)
