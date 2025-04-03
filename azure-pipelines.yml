@@ -20,7 +20,7 @@ steps:
   persistCredentials: true
   
 - script: |
-    echo "$GH_TOKEN" | gh auth login --with-token
+    echo "$GH_TOKEN" | gh auth login
   env:
     GH_TOKEN: $(Secrets.GH_TOKEN)
   displayName: "Autenticar no GitHub CLI"
