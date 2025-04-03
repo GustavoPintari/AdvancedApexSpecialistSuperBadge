@@ -20,10 +20,13 @@ steps:
   persistCredentials: true
   
 - script: |
-    echo $(GitHubPAT) | gh auth login --with-token
-  displayName: 'Authenticate with GitHub CLI'
-  env:
-    GitHubPAT: $(GitHubPAT)
+    if gh auth status &> /dev/null; then
+        echo "✅ Autenticado no GitHub CLI."
+    else
+        echo "❌ NÃO autenticado no GitHub CLI."
+        exit 1  # Opcional: falha o job se não estiver autenticado
+    fi
+  displayName: "Verificar autenticação no GitHub CLI"
   
 - script: |
     echo "Criando a branch..."
