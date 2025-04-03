@@ -14,15 +14,16 @@ variables:
   PROJECT_NAME: 'gustavopintari'
   REPO_NAME: 'AdvancedApexSpecialistSuperBadge'
   BRANCH_PREFIX: 'f-'
+  group: Secrets
   
 steps:
 - checkout: self
   persistCredentials: true
   
 - script: |
-    echo "$GH_TOKEN" | gh auth login
+    echo "$GH_TOKEN" | gh auth login --with-token
   env:
-    GH_TOKEN: $(Secrets.GH_TOKEN)
+    GH_TOKEN: $(GH_TOKEN)
   displayName: "Autenticar no GitHub CLI"
   
 - script: |
