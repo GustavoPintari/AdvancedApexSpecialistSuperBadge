@@ -21,8 +21,8 @@ steps:
   
 - script: |
     echo "$GH_TOKEN" | gh auth login --with-token
-    env:
-      GH_TOKEN: $(Secrets.GH_TOKEN)
+  env:
+    GH_TOKEN: $(Secrets.GH_TOKEN)
   displayName: "Autenticar no GitHub CLI"
   
 - script: |
