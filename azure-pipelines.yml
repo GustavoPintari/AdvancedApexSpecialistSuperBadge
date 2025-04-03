@@ -19,28 +19,17 @@ steps:
 - checkout: self
   persistCredentials: true
   
-- script: echo ${AZURE_DEVOPS_CLI_PAT} | az login
-  env:
-    AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
-  displayName: 'Login Azure DevOps Extension'
+- script: |
+    if command -v gh &> /dev/null; then
+        echo "GitHub CLI (gh) está instalado."
+    else
+        echo "GitHub CLI (gh) NÃO está instalado."
+    fi
+  displayName: "Verificar instalação do GitHub CLI no Linux/macOS"
   
-- bash:
-    az repos list --org https://dev.azure.com/$(ORG_NAME) --project $(PROJECT_NAME) --debug
-  env:
-    AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
-
 - script: |
     echo "Criando a branch..."
     WORK_ITEM_ID=${{ parameters.Incoming.resource.id }}
     BRANCH_NAME=13
-
-    OBJECT_ID=$(az repos ref list --repository $REPO_NAME --project $PROJECT_NAME --organization "https://dev.azure.com/$ORG_NAME" --query "[?name=='refs/heads/master'].objectId" -o tsv)
-
-      az repos ref create \
-      --name "heads/$BRANCH_NAME" \
-      --object-id "$OBJECT_ID" \
-      --organization "https://dev.azure.com/$ORG_NAME" \
-      --project "$PROJECT_NAME" \
-      --repository "$REPO_NAME"
 
   displayName: 'Criar nova branch no Git'
