@@ -45,7 +45,7 @@ steps:
     echo "Este é um arquivo criado automaticamente pelo pipeline." > pipeline.txt
     git add pipeline.txt
     git commit -m "Pipeline"
-
-    git push https://GustavoPintari:$(GH_TOKEN)@github.com/GustavoPintari/AdvancedApexSpecialistSuperBadge.git f-$BRANCH_NAME
+      
+    git push origin f-$BRANCH_NAME
 
   displayName: 'Criar nova branch no Git'
