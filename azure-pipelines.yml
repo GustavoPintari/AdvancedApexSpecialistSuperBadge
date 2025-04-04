@@ -53,8 +53,13 @@ steps:
   condition: 
 
 - script: |
+    echo $BRANCH
+
     TITLE="AB#$BRANCH"
-    gh pr create --base master --head $BRANCH --title "$TITLE" --fill
+
+    echo $TITLE
+
+    gh pr create --base master --head "$BRANCH" --title "$TITLE" --fill
   env:
     GITHUB_TOKEN: $(GH_TOKEN)
   displayName: 'Realizar PR'
