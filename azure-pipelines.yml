@@ -36,21 +36,26 @@ steps:
   displayName: "Configurar identidade Git"
 
 - script: |
-    WORK_ITEM_ID=${{ parameters.Incoming.resource.id }}
-    BRANCH_NAME=f-14
+
+    if [ -n "${{ parameters.Incoming.resource.id }}" ]; then
+      WORK_ITEM_ID = ${{ parameters.Incoming.resource.id }}
+    fi
+
+    PREFIX = f-
+    BRANCH = $PREFIX$WORK_ITEM_ID
 
     if git ls-remote --heads origin $BRANCH | grep $BRANCH; then
       echo "A branch $BRANCH já existe no remoto."
     else
       echo "Crindo a branch $BRANCH."
 
-      git checkout -b $BRANCH_NAME
+      git checkout -b $BRANCH
 
       echo "Este é um arquivo criado automaticamente pela pipeline." > pipeline.txt
       git add pipeline.txt
       git commit -m "Pipeline"
         
-      git push origin $BRANCH_NAME
+      git push origin $BRANCH
     fi
 
   displayName: 'Criar nova branch no Git'
