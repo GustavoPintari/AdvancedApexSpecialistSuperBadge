@@ -39,6 +39,8 @@ steps:
     WORK_ITEM_ID=${{ parameters.Incoming.resource.id }}
     BRANCH_NAME=f-14
 
+    git ls-remote --heads origin $BRANCH_NAME
+
     if [ $? -ne 0 ]; then
       git checkout -b $BRANCH_NAME
 
