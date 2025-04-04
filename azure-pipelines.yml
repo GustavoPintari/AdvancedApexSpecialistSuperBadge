@@ -29,6 +29,11 @@ steps:
   env:
     GITHUB_TOKEN: $(GH_TOKEN)
   displayName: "Verificar autenticação no GitHub"
+  
+- script: |
+    git config --global user.name $(GIT_USER_NAME)
+    git config --global user.email $(GIT_USER_EMAIL)
+  displayName: "Configurar identidade Git"
 
 - script: |
     WORK_ITEM_ID=${{ parameters.Incoming.resource.id }}
