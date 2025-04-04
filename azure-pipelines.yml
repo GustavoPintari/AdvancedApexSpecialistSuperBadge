@@ -31,6 +31,7 @@ steps:
   displayName: "Verificar autenticação no GitHub"
 
 - script: |
+    git remote -v
     echo "Criando a branch..."
     WORK_ITEM_ID=${{ parameters.Incoming.resource.id }}
     BRANCH_NAME=13
