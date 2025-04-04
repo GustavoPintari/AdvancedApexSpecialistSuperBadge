@@ -10,15 +10,7 @@ resources:
       connection: Incoming    ### Incoming webhook service connection name
 
 variables:
-  - group: Secrets
-  - name: ORG_NAME
-    value: 'gustavopintari0575'
-  - name: PROJECT_NAME
-    value: 'gustavopintari'
-  - name: REPO_NAME
-    value: 'AdvancedApexSpecialistSuperBadge'
-  - name: BRANCH_PREFIX
-    value: 'f-'
+  - group: GitHub Pipeline
   
 steps:
 - checkout: self
@@ -42,7 +34,7 @@ steps:
     fi
 
     PREFIX = f-
-    BRANCH = $PREFIX$WORK_ITEM_ID
+    BRANCH = $(PREFIX)$(WORK_ITEM_ID)
 
     if git ls-remote --heads origin $BRANCH | grep $BRANCH; then
       echo "A branch $BRANCH já existe no remoto."
