@@ -48,11 +48,11 @@ steps:
         
       git push origin $BRANCH
 
-      TITLE="AB#$BRANCH"
+      TITLE="AB#$WORK_ITEM_ID"
 
       echo $TITLE
 
-      gh pr create --base master --head "$BRANCH" --title "$TITLE" --fill
+      gh pr create --base main --head "$BRANCH" --title "$TITLE" --fill
     fi
   env:
       GITHUB_TOKEN: $(GH_TOKEN)
