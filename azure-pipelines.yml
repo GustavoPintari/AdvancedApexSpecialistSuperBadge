@@ -54,5 +54,6 @@ steps:
 
       gh pr create --base master --head "$BRANCH" --title "$TITLE" --fill
     fi
-
+  env:
+      GITHUB_TOKEN: $(GH_TOKEN)
   displayName: 'Criar nova branch no Git'
