@@ -39,9 +39,11 @@ steps:
     WORK_ITEM_ID=${{ parameters.Incoming.resource.id }}
     BRANCH_NAME=f-14
 
-    git ls-remote --heads origin $BRANCH_NAME
+    if git ls-remote --heads origin $BRANCH | grep $BRANCH; then
+      echo "A branch $BRANCH já existe no remoto."
+    else
+      echo "Crindo a branch $BRANCH."
 
-    if [ $? -ne 0 ]; then
       git checkout -b $BRANCH_NAME
 
       echo "Este é um arquivo criado automaticamente pela pipeline." > pipeline.txt
