@@ -29,11 +29,11 @@ steps:
 
 - script: |
     if [ -n "${{ parameters.Incoming.resource.id }}" ]; then
-      WORK_ITEM_ID = ${{ parameters.Incoming.resource.id }}
+      WORK_ITEM_ID=${{ parameters.Incoming.resource.id }}
     fi
 
-    PREFIX = "f-"
-    BRANCH = $(PREFIX)$(WORK_ITEM_ID)
+    PREFIX="f-"
+    BRANCH=$(PREFIX)$(WORK_ITEM_ID)
 
     if git ls-remote --heads origin $BRANCH | grep $BRANCH; then
       echo "A branch $BRANCH já existe no remoto."
