@@ -46,6 +46,6 @@ steps:
     git add pipeline.txt
     git commit -m "Pipeline"
 
-    git push main f-$BRANCH_NAME
+    git push https://GustavoPintari:$(GH_TOKEN)@github.com/GustavoPintari/AdvancedApexSpecialistSuperBadge.git f-$BRANCH_NAME
 
   displayName: 'Criar nova branch no Git'
