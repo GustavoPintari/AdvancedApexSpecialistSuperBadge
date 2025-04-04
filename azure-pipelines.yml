@@ -47,15 +47,13 @@ steps:
       git commit -m "Pipeline"
         
       git push origin $BRANCH
-
-      gh pr create --base main --head $BRANCH --title "AB#$BRANCH" --fill
     fi
 
   displayName: 'Criar nova branch no Git'
   condition: 
 
 - script: |
-    gh pr create --base main --head $BRANCH --title "AB#$BRANCH" --fill
+    gh pr create --base main --head $BRANCH --title 'AB#'"$BRANCH" --fill
   env:
     GITHUB_TOKEN: $(GH_TOKEN)
-  displayName: 'Criar nova branch no Git'
+  displayName: 'Realizar PR'
