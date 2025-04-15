@@ -32,7 +32,7 @@ steps:
       WORK_ITEM_ID=${{ parameters.Incoming.resource.id }}
     fi
 
-    echo ${{ parameters.Incoming.resource }}
+    echo "Resource name: ${{ parameters.Incoming.resource.name }}"
 
     PREFIX="f-"
     BRANCH="${PREFIX}${WORK_ITEM_ID}"
