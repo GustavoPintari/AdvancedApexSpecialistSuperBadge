@@ -28,7 +28,7 @@ steps:
   displayName: "Configurar identidade Git"
   
 - script: |
-    echo "Resource name: ${ MY_JSON }"
+    echo "${MY_JSON}"
   env:
     MY_JSON: ${{ convertToJson(parameters.Incoming.resource) }}
 
@@ -36,7 +36,6 @@ steps:
     if [ -n "${{ parameters.Incoming.resource.id }}" ]; then
       WORK_ITEM_ID=${{ parameters.Incoming.resource.id }}
     fi
-
 
     PREFIX="f-"
     BRANCH="${PREFIX}${WORK_ITEM_ID}"
