@@ -26,18 +26,29 @@ steps:
     git config --global user.name $(GIT_USER_NAME)
     git config --global user.email $(GIT_USER_EMAIL)
   displayName: "Configurar identidade Git"
-  
-- script: |
-    echo "${MY_JSON}"
-  env:
-    MY_JSON: ${{ convertToJson(parameters.Incoming.resource) }}
 
 - script: |
-    if [ -n "${{ parameters.Incoming.resource.id }}" ]; then
+    if [[ -n "${{ parameters.Incoming.resource.id }}" ]]; then
       WORK_ITEM_ID=${{ parameters.Incoming.resource.id }}
     fi
 
-    PREFIX="f-"
+    WORK_ITEM_TYPE="${{ parameters.Incoming.resource.fields.System.WorkItemType }}"
+
+    if [[ "$WORK_ITEM_TYPE" == "Feature" ]]; then
+      PREFIX="F-"
+    else
+      PREFIX="T-"
+      [[ "$WORK_ITEM_TYPE" == "Issue" ]] && PREFIX="I-"
+
+      PARENT_WORK_ITEM_ID="${{ parameters.Incoming.resource.fields.System.Parent }}"
+
+      BRANCH="${PREFIX}${WORK_ITEM_ID}"
+
+      if ! git ls-remote --heads origin "$BRANCH" | grep "$BRANCH" > /dev/null; then
+        echo "A branch $BRANCH não existe no remoto."
+      else
+    fi
+
     BRANCH="${PREFIX}${WORK_ITEM_ID}"
     
     if git ls-remote --heads origin $BRANCH | grep $BRANCH; then
