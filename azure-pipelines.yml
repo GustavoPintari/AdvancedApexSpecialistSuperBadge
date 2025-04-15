@@ -26,13 +26,17 @@ steps:
     git config --global user.name $(GIT_USER_NAME)
     git config --global user.email $(GIT_USER_EMAIL)
   displayName: "Configurar identidade Git"
+  
+- script: |
+    echo "Resource name: ${ MY_JSON }"
+  env:
+    MY_JSON: ${{ convertToJson(parameters.Incoming.resource) }}
 
 - script: |
     if [ -n "${{ parameters.Incoming.resource.id }}" ]; then
       WORK_ITEM_ID=${{ parameters.Incoming.resource.id }}
     fi
 
-    echo "Resource name: ${{ parameters.Incoming.resource }}"
 
     PREFIX="f-"
     BRANCH="${PREFIX}${WORK_ITEM_ID}"
