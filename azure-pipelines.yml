@@ -6,8 +6,8 @@
 trigger: none
 resources:
   webhooks:
-    - webhook: Incoming         ### Webhook name
-      connection: Incoming    ### Incoming webhook service connection name
+    - webhook: Incoming     ### Webhook name
+      connection: Incoming  ### Incoming webhook service connection name
 
 variables:
   - group: GitHub Pipeline
@@ -22,8 +22,8 @@ steps:
     fi
 
     echo "##vso[task.setvariable variable=WORK_ITEM_ID]${{ parameters.Incoming.resource.id }}"
-    echo "##vso[task.setvariable variable=WORK_ITEM_TYPE]${{ parameters.Incoming.resource.fields.System.WorkItemType }}"
-    echo "##vso[task.setvariable variable=PARENT_WORK_ITEM_ID]${{ parameters.Incoming.resource.fields.System.Parent }}"
+    echo "##vso[task.setvariable variable=WORK_ITEM_TYPE]${{ parameters.Incoming.resource.fields['System.WorkItemType'] }}"
+    echo "##vso[task.setvariable variable=PARENT_WORK_ITEM_ID]${{ parameters.Incoming.resource.fields['System.Parent'] }}"
   displayName: "Check incoming"
   
 - script: |
