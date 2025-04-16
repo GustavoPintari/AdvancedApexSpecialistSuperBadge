@@ -17,14 +17,11 @@ steps:
   persistCredentials: true
 
 - script : |
-    if [[ ! -n "${{ parameters.Incoming.resource }}" ]]; then
-      exit 1
-    fi
-
     echo "##vso[task.setvariable variable=WORK_ITEM_ID]${{ parameters.Incoming.resource.id }}"
     echo "##vso[task.setvariable variable=WORK_ITEM_TYPE]${{ parameters.Incoming.resource.fields.System.WorkItemType }}"
     echo "##vso[task.setvariable variable=PARENT_WORK_ITEM_ID]${{ parameters.Incoming.resource.fields.System.Parent }}"
 
+  condition: and(succeeded(), ne('${{ parameters.Incoming.resource }}', ''))
   displayName: "Check incoming"
 
 - script: |
