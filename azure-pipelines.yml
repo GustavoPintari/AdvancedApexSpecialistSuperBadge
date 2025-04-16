@@ -16,6 +16,17 @@ steps:
 - checkout: self
   persistCredentials: true
 
+- script : |
+    if [[ ! -n "${{ parameters.Incoming.resource }}" ]]; then
+      exit 1
+    fi
+
+    echo "##vso[task.setvariable variable=WORK_ITEM_ID]${{ parameters.Incoming.resource.id }}"
+    echo "##vso[task.setvariable variable=WORK_ITEM_TYPE]${{ parameters.Incoming.resource.fields.System.WorkItemType }}"
+    echo "##vso[task.setvariable variable=PARENT_WORK_ITEM_ID]${{ parameters.Incoming.resource.fields.System.Parent }}"
+
+  displayName: "Check incoming"
+
 - script: |
     gh auth status
   env:
@@ -28,9 +39,11 @@ steps:
   displayName: "Configurar identidade Git"
 
 - script: |
-    if [[ -n "${{ parameters.Incoming.resource.id }}" ]]; then
-      WORK_ITEM_ID=${{ parameters.Incoming.resource.id }}
-    fi
+    echo "$WORK_ITEM_ID"
+    echo "$WORK_ITEM_TYPE"
+    echo "$PARENT_WORK_ITEM_ID"
+
+    BASE_BRANCH="qa"
 
     WORK_ITEM_TYPE="${{ parameters.Incoming.resource.fields.System.WorkItemType }}"
 
@@ -42,18 +55,18 @@ steps:
 
       PARENT_WORK_ITEM_ID="${{ parameters.Incoming.resource.fields.System.Parent }}"
 
-      BRANCH="${PREFIX}${WORK_ITEM_ID}"
+      if ! git ls-remote --heads origin "$branch" | grep "$branch" > /dev/null; then
+        branch="F-${WORK_ITEM_ID}"
+        
+        git fetch origin $BASE_BRANCH
 
-      if ! git ls-remote --heads origin "$BRANCH" | grep "$BRANCH" > /dev/null; then
-        echo "A branch $BRANCH não existe no remoto."
-      else
+        git checkout -b $branch origin/$BASE_BRANCH
+        git push origin $branch
+      fi
     fi
 
     BRANCH="${PREFIX}${WORK_ITEM_ID}"
     
-    if git ls-remote --heads origin $BRANCH | grep $BRANCH; then
-      echo "A branch $BRANCH já existe no remoto."
-    else
       echo "Crindo a branch $BRANCH."
 
       git checkout -b $BRANCH
@@ -66,8 +79,7 @@ steps:
 
       TITLE="AB#$WORK_ITEM_ID"
 
-      gh pr create --base main --head "$BRANCH" --title "$TITLE" --body "Descrição gerada pelo pipeline."
-    fi
+      # gh pr create --base main --head "$BRANCH" --title "$TITLE" --body "Descrição gerada pelo pipeline."
   env:
       GITHUB_TOKEN: $(GH_TOKEN)
   displayName: 'Criar nova branch no Git'
