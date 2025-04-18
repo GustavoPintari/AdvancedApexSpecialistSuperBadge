@@ -18,22 +18,31 @@ steps:
 
 - script : |
     echo "##vso[task.setvariable variable=WORK_ITEM_ID]${WORK_ITEM_ID}"
+    echo "##vso[task.setvariable variable=BRANCH_PREFIX]${BRANCH_PREFIX}"
     echo "##vso[task.setvariable variable=WORK_ITEM_TYPE]${WORK_ITEM_TYPE}"
     echo "##vso[task.setvariable variable=PARENT_WORK_ITEM_ID]${PARENT_WORK_ITEM_ID}"
-
-    if [[ -z "$WORK_ITEM_ID" ]]; then
+    
+    if [[ -z "$WORK_ITEM_ID" ]] || [[ ! "$WORK_ITEM_TYPE" =~ ^($VALID_WORK_ITEM_TYPES)$ ]]; then
       exit 1
     fi
-    
-    if [[ "$WORK_ITEM_TYPE" =~ ^($VALID_WORK_ITEM_TYPES)$ ]]; then
-      echo "entrei no if"
-    fi
 
-  displayName: "Check incoming"
-  env :
+    case "$WORK_ITEM_TYPE" in
+      Feature)
+        BRANCH_PREFIX="F-"
+      ;;
+      Issue)
+        BRANCH_PREFIX="I-"
+      ;;
+      *)
+        BRANCH_PREFIX="T-"
+      ;;
+    esac
+
+  env:
     WORK_ITEM_ID: ${{ parameters.Incoming.resource.id }}
     WORK_ITEM_TYPE: ${{ parameters.Incoming.resource.fields['System.WorkItemType'] }}
     PARENT_WORK_ITEM_ID: ${{ parameters.Incoming.resource.fields['System.Parent'] }}
+  displayName: "Check incoming"
   
 - script: |
     echo "${MY_JSON}"
@@ -51,22 +60,14 @@ steps:
     git config --global user.email $(GIT_USER_EMAIL)
   displayName: "Configurar identidade Git"
 
-- script: |
-    echo "$WORK_ITEM_ID"
-    echo "$WORK_ITEM_TYPE"
-    echo "$PARENT_WORK_ITEM_ID"
 
+
+- script: |
     BASE_BRANCH="qa"
 
-    if [[ "$WORK_ITEM_TYPE" == "Feature" ]]; then
-      PREFIX="F-"
-    else
-      PREFIX="T-"
-      [[ "$WORK_ITEM_TYPE" == "Issue" ]] && PREFIX="I-"
+    echo "$BRANCH_PREFIX"
 
-      PARENT_WORK_ITEM_ID="${{ parameters.Incoming.resource.fields.System.Parent }}"
-
-      if ! git ls-remote --heads origin "$branch" | grep "$branch" > /dev/null; then
+    if ! git ls-remote --heads origin "$branch" | grep "$branch" > /dev/null; then
         branch="F-${WORK_ITEM_ID}"
         
         git fetch origin $BASE_BRANCH
@@ -76,7 +77,7 @@ steps:
       fi
     fi
 
-    BRANCH="${PREFIX}${WORK_ITEM_ID}"
+    BRANCH="${branchPrefix}${WORK_ITEM_ID}"
     
       echo "Crindo a branch $BRANCH."
 
