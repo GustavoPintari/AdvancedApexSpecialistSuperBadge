@@ -32,7 +32,7 @@ steps:
 
     if [[ "$WORK_ITEM_TYPE" =~ ^($teste)$ ]]; then
       echo "entrei no if"
-    esac
+    fi
 
   displayName: "Check incoming"
   
