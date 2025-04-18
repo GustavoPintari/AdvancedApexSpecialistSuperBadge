@@ -24,14 +24,14 @@ steps:
     echo '$(WORK_ITEM_ID)'
     echo '$(VALID_WORK_ITEM_TYPES)'
 
-    regex='^($(VALID_WORK_ITEM_TYPES))$'
+    regex='^(${VALID_WORK_ITEM_TYPES})$'
 
     if [[ '$(WORK_ITEM_TYPE)' =~ $regex ]]; then
       echo 'teste'
       echo '$(regex)'
     fi
 
-    if [[ -z '$WORK_ITEM_ID' || ! '$WORK_ITEM_TYPE' =~ $regex ]]; then
+    if [[ -z '$(WORK_ITEM_ID)' ]]; then
       exit 1
     fi
   displayName: "Check incoming"
