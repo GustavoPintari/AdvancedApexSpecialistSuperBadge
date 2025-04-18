@@ -23,7 +23,6 @@ steps:
 
     echo "$WORK_ITEM_ID"
     echo "${{ parameters.Incoming.resource.fields['System.WorkItemType'] }}"
-    echo "${{ parameters.Incoming.resource.fields }}"
     echo "$VALID_WORK_ITEM_TYPES"
 
     if [[ -z "$WORK_ITEM_ID" ]]; then
