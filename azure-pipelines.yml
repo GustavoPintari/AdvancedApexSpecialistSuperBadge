@@ -25,9 +25,7 @@ steps:
       exit 1
     fi
     
-    teste="$VALID_WORK_ITEM_TYPES"
-
-    if [[ "$WORK_ITEM_TYPE" =~ ^($teste)$ ]]; then
+    if [[ "$WORK_ITEM_TYPE" =~ ^("$VALID_WORK_ITEM_TYPES")$ ]] || ; then
       echo "entrei no if"
     fi
 
