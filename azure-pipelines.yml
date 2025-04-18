@@ -24,7 +24,9 @@ steps:
     echo "$WORK_ITEM_ID"
     echo "$(VALID_WORK_ITEM_TYPES)"
 
-    if [[ -z "$WORK_ITEM_ID" || ! "$WORK_ITEM_TYPE" =~ ^$(VALID_WORK_ITEM_TYPES)$ ]]; then
+    regex='^($(VALID_WORK_ITEM_TYPES))$'
+
+    if [[ -z "$WORK_ITEM_ID" || ! "$WORK_ITEM_TYPE" =~ regex ]]; then
       exit 1
     fi
   displayName: "Check incoming"
