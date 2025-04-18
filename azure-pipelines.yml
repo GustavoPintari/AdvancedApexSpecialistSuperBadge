@@ -17,13 +17,13 @@ steps:
   persistCredentials: true
 
 - script : |
-    if [[ -z "${{ parameters.Incoming.resource.id }}" ]]; then
-      exit 1
-    fi
-
     echo "##vso[task.setvariable variable=WORK_ITEM_ID]${{ parameters.Incoming.resource.id }}"
     echo "##vso[task.setvariable variable=WORK_ITEM_TYPE]${{ parameters.Incoming.resource.fields['System.WorkItemType'] }}"
     echo "##vso[task.setvariable variable=PARENT_WORK_ITEM_ID]${{ parameters.Incoming.resource.fields['System.Parent'] }}"
+
+    if [[ -z "$WORK_ITEM_ID" ]] || [[ "$WORK_ITEM_TYPE" != "Task" && "$WORK_ITEM_TYPE" != "Feature" && "$WORK_ITEM_TYPE" != "Issue" ]]; then
+      exit 1
+    fi
   displayName: "Check incoming"
   
 - script: |
@@ -48,8 +48,6 @@ steps:
     echo "$PARENT_WORK_ITEM_ID"
 
     BASE_BRANCH="qa"
-
-    WORK_ITEM_TYPE="${{ parameters.Incoming.resource.fields.System.WorkItemType }}"
 
     if [[ "$WORK_ITEM_TYPE" == "Feature" ]]; then
       PREFIX="F-"
