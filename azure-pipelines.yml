@@ -58,9 +58,11 @@ steps:
 
       parentBranch="F-${PARENT_WORK_ITEM_ID}"
 
-      git fetch
-      git checkout -b $parentBranch origin/$baseBrach
-      git push origin $parentBranch
+      if ! git ls-remote --exit-code --heads origin $parentBranch > /dev/null; then
+        git fetch
+        git checkout -b $parentBranch origin/$baseBrach
+        git push origin $parentBranch
+      fi 
 
       branchPrefix="T-"
       if [[ "$WORK_ITEM_TYPE" == "Impedimento" ]]; then
