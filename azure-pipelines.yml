@@ -58,6 +58,7 @@ steps:
 
       parentBranch="F-${PARENT_WORK_ITEM_ID}"
 
+      git fetch
       git checkout -b $parentBranch origin/$baseBrach
       git push origin $parentBranch
 
