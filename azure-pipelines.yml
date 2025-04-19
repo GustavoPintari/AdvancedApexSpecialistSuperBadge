@@ -46,10 +46,7 @@ steps:
     git config --global user.email $(GIT_USER_EMAIL)
   displayName: "Configurar identidade Git"
 
-
-
 - script: |
-
     if [[ "$WORK_ITEM_TYPE" == "Feature" ]]; then
       baseBrach="main"
       branchPrefix="F-"
@@ -67,8 +64,6 @@ steps:
     fi
 
     newBranch="${branchPrefix}${WORK_ITEM_ID}"
-
-    git pull
     
     git fetch origin $baseBrach
 
