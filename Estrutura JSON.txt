@@ -1,0 +1,128 @@
+Estrutura JSON:
+
+{
+    "records": [
+        {
+            "attributes": {"type": "Product2"},
+            "Name": "Product A",
+            "ProductCode": "10004579",
+            "SapId__c": "10004579",
+            "NegotiationByState__c": "AC;AL",
+            "GrossWeight__c": 24.2,
+            "NetWeight__c": 33.4,
+            "Family": "Fungicida",
+            "SalesQuantity__c": 50,
+            "ProductType__c": "Material",
+            "BrandLkp__r": {
+                "attributes": {"type": "Marca__c"},
+                "ExternalId__c": "4050"
+            },
+            "ActiveIngredients__r":{
+                "attributes": {"type": "ActiveIngredients__c"},
+                "ExternalId__c": "3090"
+            }
+        },
+        {
+            "attributes": {"type": "Product2"},
+            "Name": "Product B",
+            "ProductCode": "10004580",
+            "SapId__c": "10004580",
+            "NegotiationByState__c": "AC;AL;AM",
+            "GrossWeight__c": 10.6,
+            "NetWeight__c": 10.3,
+            "Family": "Adjuvante",
+            "SalesQuantity__c": 20,
+            "ProductType__c": "Serviço",
+            "BrandLkp__r": {
+                "attributes": {"type": "Marca__c"},
+                "ExternalId__c": "4051"
+            },
+            "ActiveIngredients__r":{
+                "attributes": {"type": "ActiveIngredients__c"},
+                "ExternalId__c": "3091"
+            }
+        },
+        {
+            "attributes": {"type": "Marca__c"},
+            "Name": "SINGULARBR",
+            "ExternalId__c": "4050"
+        },
+        {
+            "attributes": {"type": "Marca__c"},
+            "Name": "ACLAMADOBR",
+            "ExternalId__c": "4051"
+        },
+        {
+            "attributes": {"type": "ActiveIngredients__c"},
+            "Name": "SULFENTRAZONE + CLOMAZONE",
+            "ExternalId__c": "3090"
+        },
+        {
+            "attributes": {"type": "ActiveIngredients__c"},
+            "Name": "CARBOXINA 200 + TIRAM 200",
+            "ExternalId__c": "3091"
+        }
+    ],
+    "allOrNone": false,
+    "returnRecords": true,
+    "externalPattern": [
+        {
+            "sObjectName": "Product2",
+            "externalField": "ProductCode",
+            "isIndirect": true
+        },
+        {
+            "sObjectName": "Marca__c",
+            "externalField": "ExternalId__c",
+            "isIndirect": false
+        }, 
+        {
+            "sObjectName": "ActiveIngredients__c",
+            "externalField": "ExternalId__c",
+            "isIndirect": false
+        }
+    ]
+}
+
+Descrição:
+
+- records (Lista de Objetos):
+	- Produto:
+		- attributes (Objeto):
+			- type (String): Nome de Api do objeto no Salesforce (para produto deve ser definido como Product2).
+		- Name (String): Nome do Produto
+		- ProductCode (String): Código do Produto
+		- SapId__c (String): Código SAP - geralmente o mesmo que o ProductCode
+		- NegotiationByState__c (String): Negociação por Estado - já utilizado
+		- GrossWeight__c (Double):  Peso bruto
+		- NetWeight__c (Double): Peso líquido
+		- Family (String): Família do produto - Pode assumir um dos valores: Fungicida, Adjuvante, Inseticida, Herbicida, Inseticida/Acaricida, Outros
+		- SalesQuantity__c (Double): Quantidade de venda
+		- ProductType__c (String): Tipo de Produto - Pode assumir um dos valores: Material, Terceiros
+		- BrandLkp__r (Objeto): Marca
+			- attributes: (Objeto):
+				- type (String): Nome de Api do objeto no Salesforce (para marca deve ser definido como Marca__c).
+			- ExternalId__c (String):  Código da marca
+		- ActiveIngredients__r (Objeto): Ingrediente Ativo
+			- attributes: (Objeto):
+				- type (String): Nome de Api do objeto no Salesforce (para ingrediente ativo deve ser definido como ActiveIngredients__c
+			- ExternalId__c (String): Código do ingrediente ativo
+	- Marca:
+		- attributes (Objeto):
+			- type (String): Nome de Api do objeto no Salesforce (para marca deve ser definido como Marca__c)
+		- Name (String): Nome da marca
+		- ExternalId__c (String): Código externo do registro
+	- Ingrediente Ativo:
+		- attributes (Objeto):
+			- type (String): Nome de Api do objeto no Salesforce (para Ingrediente ativo deve ser definido como ActiveIngredients__c)
+		- Name (String): Ingredientes
+		- ExternalId__c (String): Código externo do registro
+
+- allOrNone (Booleano):  Se TRUE, qualquer registro na lista falhar, nenhum dos registros é processado. Se FALSE, os registros válidos são processados normalmente, e os que causam erro são ignorados (mas retornam erro individualmente no resultado).
+-
+- returnRecords (Booleano): Se TRUE, retorna os objetos na resposta da requisição
+-
+- externalPattern (Lista de Objetos):
+	- sObjectName (String): Nome do objeto no Salesforce.
+	- externalField (String): Nome de API do campo de id externo do objeto no Salesforce.
+	- isIndirect (Booleano): TRUE se o campo de id externo do objeto no Salesforce é indireto.
