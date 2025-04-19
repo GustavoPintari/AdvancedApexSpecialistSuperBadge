@@ -68,6 +68,8 @@ steps:
 
     newBranch="${branchPrefix}${WORK_ITEM_ID}"
 
+    git pull
+    
     git fetch origin $baseBrach
 
     git checkout -b $newBranch origin/$baseBrach
