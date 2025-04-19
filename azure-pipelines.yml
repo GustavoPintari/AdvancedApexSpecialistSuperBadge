@@ -83,8 +83,10 @@ steps:
 
     if [[ "$MAKE_PR" == "true" ]]; then
       echo "Este é um arquivo criado automaticamente pela pipeline na branch $newBranch" > pipeline.txt
+      
       git add pipeline.txt
       git commit -m "Pipeline"
+      git push origin $newBranch
 
       gh pr create --base "$baseBrach" --head "$newBranch" --title "$prTitle" --body "Azure devops"
     fi
