@@ -51,7 +51,7 @@ steps:
 - script: |
 
     if [[ "$WORK_ITEM_TYPE" == "Feature" ]]; then
-      baseBrach="qa"
+      baseBrach="main"
       branchPrefix="F-"
     else
       if [[ -z "$PARENT_WORK_ITEM_ID" ]]; then
