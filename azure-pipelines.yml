@@ -47,13 +47,19 @@ steps:
   displayName: "Configurar identidade Git"
 
 - script: |
+    baseBrach="main"
+
     if [[ "$WORK_ITEM_TYPE" == "Feature" ]]; then
-      baseBrach="main"
       branchPrefix="F-"
     else
       if [[ -z "$PARENT_WORK_ITEM_ID" ]]; then
         exit 1
       fi 
+
+      parentBranch="F-${PARENT_WORK_ITEM_ID}"
+
+      git checkout -b $parentBranch origin/$baseBrach
+      git push origin $parentBranch
 
       branchPrefix="T-"
       if [[ "$WORK_ITEM_TYPE" == "Issue" ]]; then
