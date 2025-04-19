@@ -48,6 +48,7 @@ steps:
 
 - script: |
     baseBrach="main"
+    prTitle="AB#$WORK_ITEM_ID"
 
     if [[ "$WORK_ITEM_TYPE" == "Feature" ]]; then
       branchPrefix="F-"
@@ -69,6 +70,7 @@ steps:
         branchPrefix="I-"
       fi
 
+      prTitle="Fixed ${prTitle}"
       baseBrach="F-${PARENT_WORK_ITEM_ID}"
     fi
 
@@ -79,19 +81,13 @@ steps:
     git checkout -b $newBranch origin/$baseBrach
     git push origin $newBranch
 
-    # echo "Crindo a branch $BRANCH."
+    if [[ "$MAKE_PR" == "true" ]]; then
+      echo "Este é um arquivo criado automaticamente pela pipeline na branch $newBranch" > pipeline.txt
+      git add pipeline.txt
+      git commit -m "Pipeline"
 
-    # git checkout -b $BRANCH
-
-    # echo "Este é um arquivo criado automaticamente pela pipeline." > pipeline.txt
-    # git add pipeline.txt
-    # git commit -m "Pipeline"
-      
-    # git push origin $BRANCH
-
-    TITLE="AB#$WORK_ITEM_ID"
-
-    # gh pr create --base main --head "$BRANCH" --title "$TITLE" --body "Descrição gerada pelo pipeline."
+      gh pr create --base $baseBrach --head $newBranch --title $prTitle --body "Devop pipeline."
+    fi
   env:
-      GITHUB_TOKEN: $(GH_TOKEN)
+    GITHUB_TOKEN: $(GH_TOKEN)
   displayName: 'Criar nova branch no Git'
