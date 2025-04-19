@@ -73,15 +73,15 @@ steps:
     git checkout -b $newBranch origin/$baseBrach
     git push origin $newBranch
 
-    echo "Crindo a branch $BRANCH."
+    # echo "Crindo a branch $BRANCH."
 
-    git checkout -b $BRANCH
+    # git checkout -b $BRANCH
 
-    echo "Este é um arquivo criado automaticamente pela pipeline." > pipeline.txt
-    git add pipeline.txt
-    git commit -m "Pipeline"
+    # echo "Este é um arquivo criado automaticamente pela pipeline." > pipeline.txt
+    # git add pipeline.txt
+    # git commit -m "Pipeline"
       
-    git push origin $BRANCH
+    # git push origin $BRANCH
 
     TITLE="AB#$WORK_ITEM_ID"
 
