@@ -58,12 +58,12 @@ steps:
 
       parentBranch="F-${PARENT_WORK_ITEM_ID}"
 
-      git pull
+      git fetch
       git checkout -b $parentBranch origin/$baseBrach
       git push origin $parentBranch
 
       branchPrefix="T-"
-      if [[ "$WORK_ITEM_TYPE" == "Issue" ]]; then
+      if [[ "$WORK_ITEM_TYPE" == "Impedimento" ]]; then
         branchPrefix="I-"
       fi
 
