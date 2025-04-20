@@ -1,8 +1,8 @@
 trigger: none
 resources:
   webhooks:
-    - webhook: Incoming     ### Webhook name
-      connection: Incoming  ### Incoming webhook service connection name
+    - webhook: AutoBranch     ### Webhook name
+      connection: AutoBranch  ### Incoming webhook service connection name
 
 variables:
   - group: GitHub Pipeline
@@ -20,9 +20,9 @@ steps:
       exit 1
     fi
   env:
-    WORK_ITEM_ID: ${{ parameters.Incoming.resource.id }}
-    WORK_ITEM_TYPE: ${{ parameters.Incoming.resource.fields['System.WorkItemType'] }}
-    PARENT_WORK_ITEM_ID: ${{ parameters.Incoming.resource.fields['System.Parent'] }}
+    WORK_ITEM_ID: ${{ parameters.AutoBranch.resource.id }}
+    WORK_ITEM_TYPE: ${{ parameters.AutoBranch.resource.fields['System.WorkItemType'] }}
+    PARENT_WORK_ITEM_ID: ${{ parameters.AutoBranch.resource.fields['System.Parent'] }}
   displayName: "Check incoming"
 
 - script: |
