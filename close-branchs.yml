@@ -1,0 +1,38 @@
+trigger: none
+resources:
+  webhooks:
+    - webhook: CloseBranch     ### Webhook name
+      connection: CloseBranch  ### Incoming webhook service connection name
+
+variables:
+  - group: GitHub Pipeline
+  
+steps:
+- checkout: self
+  persistCredentials: true
+
+- script : |
+    echo "##vso[task.setvariable variable=WORK_ITEM_ID]${WORK_ITEM_ID}"
+    
+    if [[ -z "$WORK_ITEM_ID" ]]; then
+      exit 1
+    fi
+  env:
+    WORK_ITEM_ID: ${{ parameters.CloseBranch.resource.id }}
+  displayName: "Check incoming"
+
+- script: |
+    echo "${MY_JSON}"
+  env:
+    MY_JSON: ${{ convertToJson(parameters.CloseBranch.resource.fields) }}
+
+- script: |
+    gh auth status
+  env:
+    GITHUB_TOKEN: $(GH_TOKEN)
+  displayName: "Check Github authentication"
+  
+- script: |
+    git config --global user.name $(GIT_USER_NAME)
+    git config --global user.email $(GIT_USER_EMAIL)
+  displayName: "Configure Git identity"
