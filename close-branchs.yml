@@ -24,7 +24,7 @@ steps:
 - script: |
     echo "${MY_JSON}"
   env:
-    MY_JSON: ${{ convertToJson(parameters.CloseBranch.resource.fields) }}
+    MY_JSON: ${{ convertToJson(parameters.CloseBranch.resource) }}
 
 - script: |
     gh auth status
