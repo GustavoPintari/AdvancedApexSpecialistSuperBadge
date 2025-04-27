@@ -56,5 +56,7 @@ public with sharing class ProductZoningServiceTest {
     private static Product2 createProduct() {
         Product2 product = new Product2(Name = 'Test Product', ProductCode = '440123', Family = 'Test Family');
         Database.insert(product);
+
+        return product;
     }
 }
