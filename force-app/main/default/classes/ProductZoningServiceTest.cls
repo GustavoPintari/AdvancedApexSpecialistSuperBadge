@@ -5,12 +5,12 @@ public with sharing class ProductZoningServiceTest {
     
     @IsTest
     public static void testGetPermissibleFlyZone() {
-        createProduct();
+        Product2 product = createProduct();
 
         RestRequest request = new RestRequest();
 
         request.requestURI = REQUEST_URL;
-        request.addParameter('ProductCode', 'GC1020');
+        request.addParameter('ProductCode', product.ProductCode);
         request.httpMethod = 'GET';
         request.headers.put('CountryCode', 'US');
         RestContext.request = request;
@@ -19,7 +19,6 @@ public with sharing class ProductZoningServiceTest {
         String response = ProductZoningService.getPermissibleFlyZone();
 
         Assert.areEqual('Confirm with the local authorities', response, 'Both messages must be the same.');
-
 
         request.headers.put('CountryCode', 'DE');
 
