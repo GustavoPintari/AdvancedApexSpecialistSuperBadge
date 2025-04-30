@@ -1,46 +1,85 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger: none
 resources:
   webhooks:
-    - webhook: Incoming         ### Webhook name
-      connection: Incoming    ### Incoming webhook service connection name
+    - webhook: AutoBranch     ### Webhook name
+      connection: AutoBranch  ### Incoming webhook service connection name
 
 variables:
-  ORG_NAME: 'gustavopintari0575'
-  PROJECT_NAME: 'gustavopintari'
-  REPO_NAME: 'AdvancedApexSpecialistSuperBadge'
-  BRANCH_PREFIX: 'feature'
+  - group: GitHub Pipeline
   
 steps:
 - checkout: self
   persistCredentials: true
 
-# - script: az config set extension.use_dynamic_install=yes_without_prompt
-#   displayName: 'Allow extensions'
-- script: az devops configure --defaults organization="https://dev.azure.com/$ORG_NAME" project="$PROJECT_NAME"
-  displayName: 'Config'
-
-- script: echo $(System.AccessToken) | az devops login
-  displayName: 'Login to DevOps'
-  
-- script: az repos list --org "https://dev.azure.com/$ORG_NAME" --project "$PROJECT_NAME"
-  displayName: 'Repo list'
+- script : |
+    echo "##vso[task.setvariable variable=WORK_ITEM_ID]${WORK_ITEM_ID}"
+    echo "##vso[task.setvariable variable=WORK_ITEM_TYPE]${WORK_ITEM_TYPE}"
+    echo "##vso[task.setvariable variable=PARENT_WORK_ITEM_ID]${PARENT_WORK_ITEM_ID}"
+    
+    if [[ -z "$WORK_ITEM_ID" ]] || [[ ! "$WORK_ITEM_TYPE" =~ ^($VALID_WORK_ITEM_TYPES)$ ]]; then
+      exit 1
+    fi
+  env:
+    WORK_ITEM_ID: ${{ parameters.AutoBranch.resource.id }}
+    WORK_ITEM_TYPE: ${{ parameters.AutoBranch.resource.fields['System.WorkItemType'] }}
+    PARENT_WORK_ITEM_ID: ${{ parameters.AutoBranch.resource.fields['System.Parent'] }}
+  displayName: "Check incoming"
 
 - script: |
-    echo "Criando a branch..."
-    WORK_ITEM_ID=${{ parameters.Incoming.resource.id }}
-    BRANCH_NAME=$(BRANCH_PREFIX)/WorkItem-$WORK_ITEM_ID
+    gh auth status
+  env:
+    GITHUB_TOKEN: $(GH_TOKEN)
+  displayName: "Check Github authentication"
+  
+- script: |
+    git config --global user.name $(GIT_USER_NAME)
+    git config --global user.email $(GIT_USER_EMAIL)
+  displayName: "Configure Git identity"
 
-    echo "Branch a ser criada: $BRANCH_NAME"
+- script: |
+    baseBrach="main"
+    prTitle="AB#$WORK_ITEM_ID"
 
-    az repos ref create \
-      --name "refs/heads/$BRANCH_NAME" \
-      --object-id "$WORK_ITEM_ID" \
-      --organization "https://dev.azure.com/$ORG_NAME" \
-      --project "$PROJECT_NAME" \
-      --repository "$REPO_NAME"
-  displayName: 'Criar nova branch no Git'
+    if [[ "$WORK_ITEM_TYPE" == "Feature" ]]; then
+      branchPrefix="F-"
+    else
+      if [[ -z "$PARENT_WORK_ITEM_ID" ]]; then
+        exit 1
+      fi 
+
+      parentBranch="F-${PARENT_WORK_ITEM_ID}"
+
+      if ! git ls-remote --exit-code --heads origin $parentBranch > /dev/null; then
+        git fetch
+        git checkout -b $parentBranch origin/$baseBrach
+        git push origin $parentBranch
+      fi 
+
+      branchPrefix="T-"
+      if [[ "$WORK_ITEM_TYPE" == "Impedimento" ]]; then
+        branchPrefix="I-"
+      fi
+
+      prTitle="Fixed ${prTitle}"
+      baseBrach="F-${PARENT_WORK_ITEM_ID}"
+    fi
+
+    newBranch="${branchPrefix}${WORK_ITEM_ID}"
+    
+    git fetch origin $baseBrach
+
+    git checkout -b $newBranch origin/$baseBrach
+    git push origin $newBranch
+
+    if [[ "$MAKE_PR" == "true" ]]; then
+      echo "Este é um arquivo criado automaticamente pela pipeline na branch $newBranch" > pipeline.txt
+      
+      git add pipeline.txt
+      git commit -m "Pipeline"
+      git push origin $newBranch
+
+      gh pr create --base "$baseBrach" --head "$newBranch" --title "$prTitle" --body "Azure devops"
+    fi
+  env:
+    GITHUB_TOKEN: $(GH_TOKEN)
+  displayName: "Create branch and PR"
