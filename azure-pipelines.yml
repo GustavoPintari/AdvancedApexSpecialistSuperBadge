@@ -37,7 +37,7 @@ steps:
   displayName: "Configure Git identity"
 
 - script: |
-    baseBrach="main"
+    baseBrach=$(BASE_BRANCH)
     prTitle="AB#$WORK_ITEM_ID"
 
     if [[ "$WORK_ITEM_TYPE" == "Feature" ]]; then
