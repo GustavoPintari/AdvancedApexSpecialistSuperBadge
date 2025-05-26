@@ -18,7 +18,10 @@ steps:
 
     createBranch=parameters.AutoBranch.resource.fields['Custom.Criarbranch']
     
-    if [[ -z "$WORK_ITEM_ID" ]] || [[ ! "$WORK_ITEM_TYPE" =~ ^($VALID_WORK_ITEM_TYPES)$ ]] || [[ !createBranch ]]; then
+    echo "${createBranch}"
+    
+    if [[ -z "$WORK_ITEM_ID" ]] || [[ ! "$WORK_ITEM_TYPE" =~ ^($VALID_WORK_ITEM_TYPES)$ ]] || [[ !"$createBranch" ]]; then
+      echo "$WORK_ITEM_ID"
       exit 1
     fi
   env:
