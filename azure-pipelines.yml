@@ -11,7 +11,7 @@ steps:
 - checkout: self
   persistCredentials: true
 
-- script : |
+- script: |
     echo "##vso[task.setvariable variable=WORK_ITEM_ID]${WORK_ITEM_ID}"
     echo "##vso[task.setvariable variable=WORK_ITEM_TYPE]${WORK_ITEM_TYPE}"
     echo "##vso[task.setvariable variable=PARENT_WORK_ITEM_ID]${PARENT_WORK_ITEM_ID}"
@@ -24,6 +24,12 @@ steps:
     WORK_ITEM_TYPE: ${{ parameters.AutoBranch.resource.fields['System.WorkItemType'] }}
     PARENT_WORK_ITEM_ID: ${{ parameters.AutoBranch.resource.fields['System.Parent'] }}
   displayName: "Check incoming"
+  
+- script: |
+    echo "${MY_JSON}"
+  env:
+    MY_JSON: ${{ convertToJson(parameters.AutoBranch.resource) }}
+  displayName: "Resource json"
 
 - script: |
     gh auth status
