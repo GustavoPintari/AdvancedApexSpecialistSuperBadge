@@ -20,8 +20,8 @@ steps:
     
     echo "${createBranch}"
     
-    if [[ -z "$WORK_ITEM_ID" ]] || [[ ! "$WORK_ITEM_TYPE" =~ ^($VALID_WORK_ITEM_TYPES)$ ]] || [[ !"$createBranch" ]]; then
-      echo "Exit on Work item Id $WORK_ITEM_ID"
+    if [[ -z "$WORK_ITEM_ID" ]] || [[ ! "$WORK_ITEM_TYPE" =~ ^($VALID_WORK_ITEM_TYPES)$ ]] || [[ "$createBranch" == "False" ]]; then
+      echo "Exit on Work item $WORK_ITEM_ID"
       exit 1
     fi
   env:
