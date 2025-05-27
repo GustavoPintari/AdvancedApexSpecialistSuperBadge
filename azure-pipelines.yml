@@ -22,7 +22,7 @@ steps:
     echo "##vso[task.setvariable variable=WORK_ITEM_TYPE]${WORK_ITEM_TYPE}"
     echo "##vso[task.setvariable variable=PARENT_WORK_ITEM_ID]${PARENT_WORK_ITEM_ID}"
     
-    echo "${{ parameters.AutoBranch.resource.fields['Custom.Criarbranch'].newValue }}"
+    # echo "${{ parameters.AutoBranch.resource.fields['Custom.Criarbranch'].newValue }}"
     echo "${{ parameters.AutoBranch.resource.rev }}"
 
     # if [[ ${{ parameters.AutoBranch.resource.rev }} -ne 1 ]]; then
