@@ -22,8 +22,6 @@ steps:
     echo "##vso[task.setvariable variable=WORK_ITEM_TYPE]${WORK_ITEM_TYPE}"
     echo "##vso[task.setvariable variable=PARENT_WORK_ITEM_ID]${PARENT_WORK_ITEM_ID}"
 
-    createBranch=${{ parameters.AutoBranch.resource.fields['Custom.Criarbranch'] }}
-
     if [[ -z "$WORK_ITEM_ID" ]]; then
       echo "##vso[task.logissue type=error]Work item ID not found."
       exit 1
@@ -34,7 +32,7 @@ steps:
       exit 1
     fi
 
-    if [[ "$createBranch" == "false" ]]; then
+    if [[ "${{ parameters.AutoBranch.resource.fields['Custom.Criarbranch'] }}" == "false" ]]; then
       echo "##vso[task.logissue type=error]createBranch is set to false on work item $WORK_ITEM_ID."
       exit 1
     fi
