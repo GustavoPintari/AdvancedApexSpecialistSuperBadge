@@ -32,9 +32,7 @@ steps:
       exit 1
     fi
 
-    echo "${{ parameters.AutoBranch.resource.fields['Custom.Criarbranch'] }}"
-
-    if [[ "${{ parameters.AutoBranch.resource.fields['Custom.Criarbranch'] }}" == "false" ]]; then
+    if [[ "${{ parameters.AutoBranch.resource.fields['Custom.Criarbranch'] }}" == "False" ]]; then
       echo "##vso[task.logissue type=error]createBranch is set to false on work item $WORK_ITEM_ID."
       exit 1
     fi
