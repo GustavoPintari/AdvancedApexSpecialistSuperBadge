@@ -37,7 +37,7 @@ steps:
       exit 1
     fi
   env:
-    WORK_ITEM_ID: ${{ parameters.AutoBranch.resource.Id }}
+    WORK_ITEM_ID: ${{ parameters.AutoBranch.resource.id }}
     WORK_ITEM_TYPE: ${{ parameters.AutoBranch.resource.fields['System.WorkItemType'] }}
     PARENT_WORK_ITEM_ID: ${{ parameters.AutoBranch.resource.fields['System.Parent'] }}
   displayName: "Check incoming"
