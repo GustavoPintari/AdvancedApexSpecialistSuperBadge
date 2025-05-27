@@ -23,9 +23,11 @@ steps:
     echo "##vso[task.setvariable variable=PARENT_WORK_ITEM_ID]${PARENT_WORK_ITEM_ID}"
 
     createBranch=${{ parameters.AutoBranch.resource.fields['Custom.Criarbranch'] }}
+
+    echo "${createBranch}"
         
-    if [[ -z "$WORK_ITEM_ID" ]] || [[ ! "$WORK_ITEM_TYPE" =~ ^($VALID_WORK_ITEM_TYPES)$ ]] || [[ "$createBranch" == "false" ]]; then
-      echo "Exit on Work item $WORK_ITEM_ID"
+    if [[ -z "$WORK_ITEM_ID" ]] || [[ ! "$WORK_ITEM_TYPE" =~ ^($VALID_WORK_ITEM_TYPES)$ ]]; then
+      echo "##vso[task.logissue type=error]Exit on Work item $WORK_ITEM_ID."
       exit 1
     fi
   env:
