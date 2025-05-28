@@ -67,9 +67,8 @@ steps:
       parentBranch="F-${PARENT_WORK_ITEM_ID}"
 
       if ! git ls-remote --exit-code --heads origin $parentBranch > /dev/null; then
-        git fetch
-        git checkout -b $parentBranch origin/$baseBrach
-        git push origin $parentBranch
+        echo "##vso[task.logissue type=error]Exit on Work item $WORK_ITEM_ID - Parent work item branch dont exist."
+        exit 1
       fi 
 
       branchPrefix="T-"
