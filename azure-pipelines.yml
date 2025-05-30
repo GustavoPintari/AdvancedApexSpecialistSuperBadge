@@ -124,23 +124,22 @@ steps:
 
     uri="https://dev.azure.com/gustavopintari0575/gustavopintari/_apis/wit/workitems/${WORK_ITEM_ID}?api-version=7.1-preview.3"
 
-    json_payload=$(cat <<EOF
-    [
+    json_payload='[
       {
         "op": "add",
         "path": "/fields/System.Title",
-        "value": "Novo título via pipeline"
-      },
-      {
-        "op": "add",
-        "path": "/fields/System.Description",
-        "value": "Atualizado automaticamente via script Bash"
+        "value": "Título atualizado via Bash"
       }
-    ]
-    EOF
-    )
+    ]'
 
-    echo "Enviando PATCH para $uri"
+    # Convertendo o token de acesso para Base64
+    auth=$(echo -n ":$pat" | base64)
+
+    # Fazendo a chamada PATCH
+    curl -X PATCH "$uri" \
+      -H "Content-Type: application/json-patch+json" \
+      -H "Authorization: Basic $auth" \
+      -d "$json_payload"
 
     curl -sS -X PATCH "$uri" \
       -H "Content-Type: application/json-patch+json" \
