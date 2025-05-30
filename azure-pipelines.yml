@@ -140,12 +140,6 @@ steps:
       -H "Content-Type: application/json-patch+json" \
       -H "Authorization: Basic $auth" \
       -d "$json_payload"
-
-    curl -sS -X PATCH "$uri" \
-      -H "Content-Type: application/json-patch+json" \
-      -H "Authorization: Basic $(echo -n :$pat | base64)" \
-      -d "$json_payload"
-
   env:
     pat: $(System.AccessToken)  # usa token do sistema, habilite nas configurações do pipeline
   displayName: 'Atualizar Work Item via Bash'
