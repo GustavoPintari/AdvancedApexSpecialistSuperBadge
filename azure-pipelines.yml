@@ -120,30 +120,6 @@ steps:
     GITHUB_TOKEN: $(GH_TOKEN)
   displayName: "Create branch and PR"
 
-- script: |
-    echo "Atualizando Work Item #$workItemId"
-
-    uri="https://dev.azure.com/gustavopintari0575/gustavopintari/_apis/wit/workitems/${WORK_ITEM_ID}?api-version=7.1-preview.3"
-
-    json_payload='[
-      {
-        "op": "add",
-        "path": "/fields/System.Title",
-        "value": "Título atualizado via Bash"
-      }
-    ]'
-
-    # Convertendo o token de acesso para Base64
-    auth=$(echo -n ":$pat" | base64)
-
-    # Fazendo a chamada PATCH
-    curl -X PATCH "$uri" \
-      -H "Content-Type: application/json-patch+json" \
-      -H "Authorization: Basic $auth" \
-      -d "$json_payload"
-  env:
-    pat: $(System.AccessToken)  # usa token do sistema, habilite nas configurações do pipeline
-  displayName: 'Atualizar Work Item via Bash'
 - task: WorkItemUpdater@3
   inputs:
     workitemsSource: 'Build'
