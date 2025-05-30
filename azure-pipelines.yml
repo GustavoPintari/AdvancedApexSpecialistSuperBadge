@@ -14,7 +14,7 @@ steps:
 - script: |
     echo "${MY_JSON}"
   env:
-    MY_JSON: ${{ convertToJson(parameters.AutoBranch.resource) }}
+    MY_JSON: ${{ convertToJson(parameters.AutoBranch) }}
   displayName: "Resource json"
 
 - script: |
