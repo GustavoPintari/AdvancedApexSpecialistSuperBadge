@@ -26,15 +26,18 @@ steps:
 
     workItemId=$(echo "$path" | jq -r '.id')
     workItemType=$(echo "$path" | jq -r '.fields["System.WorkItemType"]')
+    createBranch=$(echo "$path" | jq -r '.fields["Custom.CreateBranch"]')
     parentWorkItemId=$(echo "$path" | jq -r '.fields["System.Parent"] // empty')
 
     echo "WORK_ITEM_ID=${workItemId}"
+    echo "CREATE_BRANCH=${createBranch}"
     echo "WORK_ITEM_TYPE=${workItemType}"
     echo "PARENT_WORK_ITEM_ID=${parentWorkItemId}"
 
     echo "##vso[task.setvariable variable=WORK_ITEM_ID]${workItemId}"
     echo "##vso[task.setvariable variable=WORK_ITEM_TYPE]${workItemType}"
-    echo "##vso[task.setvariable variable=PARENT_WORK_ITEM_ID]${parentWorkItemId}" 
+    echo "##vso[task.setvariable variable=CREATE_BRANCH]${createBranch}"
+    echo "##vso[task.setvariable variable=PARENT_WORK_ITEM_ID]${parentWorkItemId}"
   env:
     EVENT_TYPE: ${{ parameters.AutoBranch.eventType }}
     RESOURCE_PATH: ${{ convertToJson(parameters.AutoBranch.resource) }}
