@@ -1,4 +1,5 @@
 trigger: none
+
 resources:
   webhooks:
     - webhook: AutoBranch     ### Webhook name
@@ -143,3 +144,10 @@ steps:
   env:
     pat: $(System.AccessToken)  # usa token do sistema, habilite nas configurações do pipeline
   displayName: 'Atualizar Work Item via Bash'
+- task: WorkItemUpdater@3
+  inputs:
+    workitemsSource: 'Build'
+    workItemType: 'Feature'
+    workitemLimit: '1'
+    updateAssignedTo: 'Never'
+    updateFields: 'Custom.Criarbranch,True'
