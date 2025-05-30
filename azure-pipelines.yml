@@ -25,8 +25,8 @@ steps:
     fi
 
     workItemId=$(echo "$path" | jq -r '.id')
+    createBranch=$(echo "$path" | jq -r '.fields["Custom.Criarbranch"]')
     workItemType=$(echo "$path" | jq -r '.fields["System.WorkItemType"]')
-    createBranch=$(echo "$path" | jq -r '.fields["Custom.CreateBranch"]')
     parentWorkItemId=$(echo "$path" | jq -r '.fields["System.Parent"] // empty')
 
     echo "WORK_ITEM_ID=${workItemId}"
