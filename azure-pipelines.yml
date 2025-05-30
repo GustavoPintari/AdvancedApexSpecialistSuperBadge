@@ -55,7 +55,7 @@ steps:
       exit 1
     fi
 
-    if [[ "$CREATE_BRANCH" == "False" ]]; then
+    if [[ "$CREATE_BRANCH" == "false" ]]; then
       echo "##vso[task.logissue type=error]createBranch is set to false on work item $WORK_ITEM_ID."
       exit 1
     fi
