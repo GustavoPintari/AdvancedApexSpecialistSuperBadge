@@ -118,3 +118,35 @@ steps:
   env:
     GITHUB_TOKEN: $(GH_TOKEN)
   displayName: "Create branch and PR"
+
+- script: |
+    echo "Atualizando Work Item #$workItemId"
+
+    uri="https://dev.azure.com/gustavopintari0575/gustavopintari/_apis/wit/workitems/${WORK_ITEM_ID}?api-version=7.1-preview.3"
+
+    json_payload=$(cat <<EOF
+    [
+      {
+        "op": "add",
+        "path": "/fields/System.Title",
+        "value": "Novo título via pipeline"
+      },
+      {
+        "op": "add",
+        "path": "/fields/System.Description",
+        "value": "Atualizado automaticamente via script Bash"
+      }
+    ]
+    EOF
+    )
+
+    echo "Enviando PATCH para $uri"
+
+    curl -sS -X PATCH "$uri" \
+      -H "Content-Type: application/json-patch+json" \
+      -H "Authorization: Basic $(echo -n :$pat | base64)" \
+      -d "$json_payload"
+
+  env:
+    pat: $(System.AccessToken)  # usa token do sistema, habilite nas configurações do pipeline
+  displayName: 'Atualizar Work Item via Bash'
