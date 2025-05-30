@@ -43,6 +43,23 @@ steps:
     RESOURCE_PATH: ${{ convertToJson(parameters.AutoBranch.resource) }}
     REVISION_PATH: ${{ convertToJson(parameters.AutoBranch.resource.revision) }}
   displayName: "Set global variables"
+  
+- script: |
+    if [[ -z "$WORK_ITEM_ID" ]]; then
+      echo "##vso[task.logissue type=error]Work item ID not found."
+      exit 1
+    fi
+
+    if [[ ! "$WORK_ITEM_TYPE" =~ ^($VALID_WORK_ITEM_TYPES)$ ]]; then
+      echo "##vso[task.logissue type=error]Exit on Work item $WORK_ITEM_ID - Invalid type."
+      exit 1
+    fi
+
+    if [[ "$CREATE_BRANCH" == "False" ]]; then
+      echo "##vso[task.logissue type=error]createBranch is set to false on work item $WORK_ITEM_ID."
+      exit 1
+    fi
+  displayName: "Validate"
 
 - script: |
     gh auth status
