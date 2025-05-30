@@ -18,8 +18,12 @@ steps:
   displayName: "Resource json"
 
 - script: |
-    path='${{ convertToJson(parameters.AutoBranch.resource) }}'
-    
+    path="${RESOURCE_PATH}"
+
+    if [[ "$EVENT_TYPE" == "workitem.updated" ]]; then
+      path="${REVISION_PATH}"
+    fi
+
     workItemId=$(echo "$path" | jq -r '.id')
     workItemType=$(echo "$path" | jq -r '.fields["System.WorkItemType"]')
     parentWorkItemId=$(echo "$path" | jq -r '.fields["System.Parent"] // empty')
@@ -34,6 +38,7 @@ steps:
   env:
     EVENT_TYPE: ${{ parameters.AutoBranch.eventType }}
     RESOURCE_PATH: ${{ convertToJson(parameters.AutoBranch.resource) }}
+    REVISION_PATH: ${{ convertToJson(parameters.AutoBranch.resource.revision) }}
   displayName: "Set global variables"
 
 - script: |
