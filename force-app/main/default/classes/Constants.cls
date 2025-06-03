@@ -11,18 +11,19 @@ public with sharing class Constants {
     public static final List<Schema.PicklistEntry> PRODUCT_FAMILY;
 
     static {
-        if (String.isBlank(STANDARD_PRICEBOOK_ID)) {
-            STANDARD_PRICEBOOK_ID = [SELECT Id FROM Pricebook2 WHERE IsStandard = true].Id;
+        Id pricebook2Id;
+
+        if (Test.isRunningTest()) {
+            pricebook2Id = Test.getStandardPricebookId();
+        } else {
+            pricebook2Id = [SELECT Id FROM Pricebook2 WHERE IsStandard = true]?.Id;
         }
+
+        STANDARD_PRICEBOOK_ID = pricebook2Id;
 
         if (PRODUCT_FAMILY == null) {
             PRODUCT_FAMILY = new List<Schema.PicklistEntry>();
-
-            Schema.DescribeFieldResult fieldResult = Product2.Family.getDescribe();
-
-            for (Schema.PicklistEntry entry : fieldResult.getPicklistValues()){
-                PRODUCT_FAMILY.add(entry);
-            }
+            PRODUCT_FAMILY.addAll(Product2.Family.getDescribe().getPicklistValues());
         }
     }
 }
