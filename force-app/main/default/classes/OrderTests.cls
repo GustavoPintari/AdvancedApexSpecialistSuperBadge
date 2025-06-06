@@ -1,9 +1,14 @@
 @isTest
 public with sharing class OrderTests {
 
+    @testSetup
+    public static void setupTestData() {
+        TestDataFactory.insertTestData(1);
+    }
+
     @isTest
     public static void testOrderHelper() {
-        Product2 product2 = new Product2(Name = 'Test Product', Family = 'Entree', Initial_Inventory__c = 20.0);
+        Product2 product2 = new Product2(Name = 'Test Product', Family = 'Entree', Initial_Inventory__c = 20.0, Quantity_Ordered__c = 0);
         Database.insert(product2);
 
         Pricebook2 pricebook2 = new Pricebook2(Id = Test.getStandardPricebookId());
@@ -29,8 +34,10 @@ public with sharing class OrderTests {
 
         Test.stopTest();
 
-        product2 = [SELECT Id, Quantity_Ordered__c FROM Product2 WHERE Id = :product2.Id];
+        Product2 updatedProduct2 = [SELECT Id, Quantity_Ordered__c FROM Product2 WHERE Id = :product2.Id];
 
-        Assert.areEqual(orderItem.Quantity, product2.Quantity_Ordered__c, 'The value must match the quantity of the order item.');
+        TestDataFactory.verifyQuantityOrdered(product2, updatedProduct2, (Integer) orderItem.Quantity);
+
+        Assert.areEqual(orderItem.Quantity, updatedProduct2.Quantity_Ordered__c, 'The value must match the quantity of the order item.');
     }
 }
