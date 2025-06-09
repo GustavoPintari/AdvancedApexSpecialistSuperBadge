@@ -1,104 +1,157 @@
 public class Product2Extension {
 
-    public List<ProductWrapper> productsToInsert { get; set; }
+    public List<ProductWrapper> productsToInsert {get;set;}
 
-    public Product2Extension(ApexPages.StandardController controller) {
-        this.productsToInsert = new List<ProductWrapper>();
-        addRows();
+    public Product2Extension(ApexPages.StandardController controller){
+
+        productsToInsert = new List<ProductWrapper>();
+
+        AddRows();
+
     }
 
-    public void addRows() {
-        for (Integer i = 0; i < Constants.DEFAULT_ROWS; i++) {
-            this.productsToInsert.add(new ProductWrapper());
-        }
-    }
+    public void AddRows(){
 
-    public List<SelectOption> getFamilyOptions() {
-        List<SelectOption> lOptions = new List<SelectOption>();
+        for ( Integer i=0; i<Constants.DEFAULT_ROWS; i++ ){
 
-        lOptions.add(new SelectOption(Constants.SELECT_ONE, Constants.SELECT_ONE));
+            ProductWrapper prodWrapper = new ProductWrapper();
 
-        for (Schema.PicklistEntry picklistEntry : Constants.PRODUCT_FAMILY) {
-            lOptions.add(new SelectOption(picklistEntry.getValue(), picklistEntry.getLabel()));
+            productsToInsert.add( prodWrapper );
+
         }
 
-        return lOptions;
     }
 
-    public List<ChartHelper.ChartData> getInventory() {
-        return ChartHelper.getInventory();
+    public List<ChartHelper.ChartData> GetInventory(){
+
+        return ChartHelper.GetInventory();
+
     }
 
-    public PageReference save() {
-        SavePoint savePoint = Database.setSavepoint();
+    public PageReference Save(){
 
-        List<Product2> lProducts = new List<Product2>();
-        List<PricebookEntry> lPricebookEntries = new List<PricebookEntry>();
-
-        final Id pricebook2Id = Constants.STANDARD_PRICEBOOK_ID;
+        SavePoint sp1 = Database.setSavepoint();
 
         try {
-            for (ProductWrapper productWrapper : this.productsToInsert) {
-                if (!validateProduct(productWrapper)) {
-                    continue;
+
+            Map<Integer, Product2> products = new Map<Integer, Product2>();
+
+            Map<Integer, PriceBookEntry> priceBookEntries = new Map<Integer, PriceBookEntry>();    
+
+            Integer index = 0;
+
+            for(ProductWrapper prdWrapper : productsToInsert) {
+
+                if(String.isNotBlank(prdWrapper.productRecord.Name) && prdWrapper.pricebookEntryRecord.UnitPrice!=null && 
+
+                   prdWrapper.productRecord.Initial_Inventory__c!=null && prdWrapper.productRecord.isActive && 
+
+                   prdWrapper.productRecord.Initial_Inventory__c != 0 && prdWrapper.pricebookEntryRecord.UnitPrice!=0){
+
+                          
+
+                    products.put(index,prdWrapper.productRecord);
+
+                    priceBookEntries.put(index,prdWrapper.pricebookEntryRecord);
+
+                    index ++;
+
                 }
 
-                lProducts.add(productWrapper.productRecord);
-                lPricebookEntries.add(productWrapper.pricebookEntryRecord);
             }
 
-            List<Database.SaveResult> lSaveResult = Database.insert(lProducts, false);
+            
 
-            Integer insertedProducts = 0;
-            for (Integer i = 0; i < lSaveResult.size(); i++) {
-                if (!lSaveResult[i].isSuccess()) {
-                    lPricebookEntries.remove(i);
-                    continue;
+            insert products.values();
+
+            
+
+            List<PriceBookEntry> pbList = new List<PriceBookEntry>();
+
+            for(Integer mapIndex : products.keySet()) {
+
+                PriceBookEntry currentPBEntry = priceBookEntries.get(mapIndex);
+
+                if(products.get(mapIndex).Id!=null) {
+
+                    currentPBEntry.Pricebook2Id = Constants.STANDARD_PRICEBOOK_ID;
+
+                    System.debug('' + products.get(mapIndex).Id);
+
+                    currentPBEntry.Product2Id = products.get(mapIndex).Id;
+
+                    currentPBEntry.IsActive = true;
+
+                    pbList.add(currentPBEntry);
+
                 }
 
-                PricebookEntry pricebookEntry = lPricebookEntries[i];
-                pricebookEntry.IsActive = true;
-                pricebookEntry.Pricebook2Id = pricebook2Id;
-                pricebookEntry.Product2Id = lSaveResult[i].getId();
+                
 
-                insertedProducts++;
             }
 
-            Database.insert(lPricebookEntries);
+            
+
+            insert pbList;
 
             //If successful clear the list and display an informational message
-            apexPages.addMessage(new ApexPages.message(ApexPages.Severity.INFO, insertedProducts + ' Inserted'));
-            this.productsToInsert.clear();   //Do not remove
+
+            apexPages.addMessage(new ApexPages.message(ApexPages.Severity.INFO,pbList.size()+' Inserted'));
+
+            productsToInsert.clear();   //Do not remove
+
             addRows();  //Do not remove
-        } catch (Exception e) {
-            Database.rollback(savepoint);
-            apexPages.addMessage(new ApexPages.message(ApexPages.Severity.ERROR, Constants.ERROR_MESSAGE));
+
+        } catch (Exception e){
+
+            apexPages.addMessage(new ApexPages.message(ApexPages.Severity.ERROR,Constants.ERROR_MESSAGE));
+
+            Database.rollback(sp1);
+
         }
 
         return null;
+
     }
 
-    private Boolean validateProduct(ProductWrapper productWrapper) {
-        String name = productWrapper.productRecord.Name;
-        String family = productWrapper.productRecord.Family;
-        Boolean isActive = productWrapper.productRecord.IsActive;
-        Decimal unitPrice = productWrapper.pricebookEntryRecord.UnitPrice;
-        Decimal initialInventory = productWrapper.productRecord.Initial_Inventory__c;
+    
 
-        if (String.isBlank(name) || String.isBlank(family) || family == Constants.SELECT_ONE || unitPrice == null || unitPrice == 0 || initialInventory == null || initialInventory == 0 || !isActive) {
-            return false;
+    public List<SelectOption> GetFamilyOptions(){
+
+        List<SelectOption> options = new List<SelectOption>();
+
+        options.add(new SelectOption(Constants.SELECT_ONE,Constants.SELECT_ONE));
+
+        for(Schema.PicklistEntry entry : Constants.PRODUCT_FAMILY){
+
+            options.add(new SelectOption(entry.getLabel(),entry.getValue()));
+
         }
 
-        return true;
+        return options;
+
     }
 
-    public class ProductWrapper {
-        public Product2 productRecord { get; set; }
-        public PriceBookEntry pricebookEntryRecord { get; set; }
+    
+
+    
+
+    public class ProductWrapper{
+
+        public Product2 productRecord {get;set;}
+
+        public PriceBookEntry pricebookEntryRecord {get;set;}
+
+        
 
         public ProductWrapper() {
-            productRecord = new Product2(Initial_Inventory__c = 0);
-            pricebookEntryRecord = new PriceBookEntry(UnitPrice = 0);
+
+            productRecord = new Product2(Initial_Inventory__c =0, Name='Test Product', isActive=true); 
+
+            pricebookEntryRecord = new PricebookEntry(Unitprice=0.0);
+
         }
+
     }
+
 }

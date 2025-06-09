@@ -76,6 +76,8 @@ public class Product2Helper {
             toPost.add(announcement);
         }
 
-        System.enqueueJob(new AnnouncementQueueable(toPost));
+        AnnouncementQueueable announcementQueueable = new AnnouncementQueueable();
+        announcementQueueable.toPost = toPost;
+        System.enqueueJob(announcementQueueable);
     }
 }

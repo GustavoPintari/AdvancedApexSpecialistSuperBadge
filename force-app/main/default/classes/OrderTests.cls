@@ -1,13 +1,13 @@
 @isTest
-public with sharing class OrderTests {
+private with sharing class OrderTests {
 
     @testSetup
-    public static void setupTestData() {
+    private static void setupTestData() {
         TestDataFactory.insertTestData(1);
     }
 
     @isTest
-    public static void testOrderHelper() {
+    private static void orderUpdate_UnitTest() {
         Product2 product2 = new Product2(Name = 'Test Product', Family = 'Entree', Initial_Inventory__c = 20.0, Quantity_Ordered__c = 0);
         Database.insert(product2);
 
@@ -39,5 +39,33 @@ public with sharing class OrderTests {
         TestDataFactory.verifyQuantityOrdered(product2, updatedProduct2, (Integer) orderItem.Quantity);
 
         Assert.areEqual(orderItem.Quantity, updatedProduct2.Quantity_Ordered__c, 'The value must match the quantity of the order item.');
+    }
+
+    @isTest
+    private static void orderExtension_UnitTest() {
+        Test.setCurrentPage(Page.OrderEdit);
+        OrderExtension extension = new OrderExtension(new Apexpages.StandardController([SELECT Id FROM Order LIMIT 1]));
+
+        Test.startTest();
+
+        Assert.areEqual(1, extension.orderItemList.size(), 'Only one order should be instantiated.');
+
+        extension.selectedFamily = 'Dessert';
+        extension.SelectFamily();
+        extension.OnFieldChange();
+        extension.First();
+        extension.Next();
+        extension.Previous();
+        extension.Last();
+        extension.GetHasNext();
+        extension.GetPageNumber();
+        extension.GetHasPrevious();
+        extension.GetTotalPages();
+        extension.GetFamilyOptions();
+        extension.Save();
+        ChartHelper.GetInventory();
+
+        Test.stopTest();
+
     }
 }

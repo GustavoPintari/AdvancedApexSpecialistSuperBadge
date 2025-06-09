@@ -6,7 +6,7 @@ public with sharing class Product2Tests {
      * @description UnitTest for product2Extension
     **/
     @isTest
-    public static void product2Extension_UnitTest() {
+    private static void product2Extension_UnitTest() {
         Test.setCurrentPage(Page.product2New);
 
         Test.startTest();
@@ -40,4 +40,30 @@ public with sharing class Product2Tests {
 
         Assert.areEqual(Constants.DEFAULT_ROWS * 2, lProduct2.size(), 'The number inserted products must match the one stored in the Constants class.');
     }
+
+    @isTest
+    private static void product2Trigger_UnitTest() {
+        Product2 product = new Product2();
+        product.Name = 'Test';
+        product.Family = 'Dessert';
+        product.IsActive = true;
+        product.Quantity_Ordered__c = 5;
+        product.Initial_Inventory__c = 10;
+        Database.insert(product);
+        
+        CollaborationGroup collabGroup = new CollaborationGroup();
+        collabGroup.Name = 'TEST' + Constants.INVENTORY_ANNOUNCEMENTS;
+        collabGroup.Description = 'Test';
+        collabGroup.CollaborationType = 'Public';
+        Database.insert(collabGroup);
+        
+        Test.startTest();
+
+        product.Quantity_Ordered__c = 80;
+        Database.SaveResult result = Database.update(product, false);
+
+        Test.stopTest();
+
+        Assert.isTrue(result.isSuccess(), 'The product must be updated without errors.');
+    } 
 }
